@@ -10,6 +10,11 @@ namespace Plagiarism_Validation
     {
         static void Main(string[] args)
         {
+            // Path to your Excel file
+            string filePath = @"D:\uni\Algo\file.xlsx";
+
+            // Read the Excel file using the Excel class
+            Excel.Read(filePath);
         }
     }
 }
