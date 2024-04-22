@@ -10,11 +10,24 @@ namespace Plagiarism_Validation
     {
         static void Main(string[] args)
         {
+            /*// Path to your Excel file
+            string filePath = @"D:\uni\Algo\file.xlsx";
+            Excel excel = new Excel();
+            // Read the Excel file using the Excel class
+            Excel.Read(filePath);*/
+
             // Path to your Excel file
             string filePath = @"D:\uni\Algo\file.xlsx";
+            //Console.WriteLine("hello");
+            // Read the file pairs and percentages from the Excel file using the Excel class
+            List<(string file1, int percentage1, string file2, int percentage2)> pairs = Excel.ReadFilePairs(filePath);
 
-            // Read the Excel file using the Excel class
-            Excel.Read(filePath);
+            // Output the pairs
+            foreach (var pair in pairs)
+            {
+                Console.WriteLine("hello");
+                Console.WriteLine($"File1: {pair.file1}, Percentage1: {pair.percentage1}%, File2: {pair.file2}, Percentage2: {pair.percentage2}%");
+            }
         }
     }
 }
