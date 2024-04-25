@@ -16,22 +16,29 @@ namespace Plagiarism_Validation
             // Read the Excel file using the Excel class
             Excel.Read(filePath);*/
 
-            string filePath = @"D:\UNI Material\algo proj\testcases\1-Input.xlsx";
+            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\2-Input.xlsx";
             //Console.WriteLine("hello");
             // Read the file pairs and percentages from the Excel file
             List<(string file1, int percentage1, string file2, int percentage2)> pairs = Excel.ReadFilePairs(filePath);
  
-            foreach (var pair in pairs)
+            /*foreach (var pair in pairs)
             {
                 //Console.WriteLine("hello");
                 Console.WriteLine($"File1: {pair.file1}, Percentage1: {pair.percentage1}%, File2: {pair.file2}, Percentage2: {pair.percentage2}%");
-            }
+            }*/
             GraphBuilder graphBuilder = new GraphBuilder();
-            graphBuilder.BuildGraph(pairs);
+            graphBuilder.BuildMSTGraph(pairs);
 
             // Print the graph (optional)
             graphBuilder.PrintGraph();
-            Console.ReadLine();
+            MST test = new MST();
+            long cost = test.ConstructingMST(graphBuilder.edges);
+            Console.WriteLine(cost);
+            foreach(var i in test.result)
+            {
+                Console.WriteLine("{0} ({1}, {2})", i.Item1, test.nodeIdMap.FirstOrDefault(x => x.Value == i.Item2.Item1).Key, test.nodeIdMap.FirstOrDefault(x => x.Value == i.Item2.Item2).Key);
+            }
+            //Console.ReadLine();
         }
     }
 }

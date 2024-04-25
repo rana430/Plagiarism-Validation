@@ -5,7 +5,7 @@ namespace Plagiarism_Validation
 {
     public class GraphBuilder
     {
-        private HashSet<(string source, string destination, int weight)> edges;
+        public HashSet<(string source, string destination, int weight)> edges;
 
         public GraphBuilder()
         {
