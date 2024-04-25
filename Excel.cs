@@ -27,28 +27,27 @@ public class Excel
             //loop to read the data
             for (int row = 1; row <= rowCount; row++)
             {
-                //Console.WriteLine("hello");
                 string cellValue1 = worksheet.Cells[row, 1].Value?.ToString();
-                string cellValue2 = worksheet.Cells[row, 2].Value?.ToString(); 
+                string cellValue2 = worksheet.Cells[row, 2].Value?.ToString();
 
-
-                // Remove % from the percentage strings 3shan a7awelo le int
+                // Remove % from the percentage strings to convert them to int
                 string percentageString1 = cellValue1.Replace("%", "");
                 string percentageString2 = cellValue2.Replace("%", "");
 
                 // split cell values into file path and percentage
                 string[] parts1 = percentageString1.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
                 string[] parts2 = percentageString2.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
-                //Console.WriteLine("hello");
 
-                int.TryParse(parts1[1], out int percentage1);
-                int.TryParse(parts2[1], out int percentage2);
+                int percentage1 = 0;
+                int percentage2 = 0;
 
-
-                //if (parts1.Length == 2 && parts2.Length == 2 && int.TryParse(parts1[1], out int percentage1) && int.TryParse(parts2[1], out int percentage2))
-                //{
-                   pairs.Add((parts1[0].Trim(), percentage1, parts2[0].Trim(), percentage2));
-                // }
+                if (parts1.Length >= 2 && int.TryParse(parts1[1], out percentage1))
+                {
+                    if (parts2.Length >= 2 && int.TryParse(parts2[1], out percentage2))
+                    {
+                        pairs.Add((parts1[0].Trim(), percentage1, parts2[0].Trim(), percentage2));
+                    }
+                }
             }
         }
 
