@@ -5,9 +5,9 @@ using OfficeOpenXml; // Include EPPlus namespace
 
 public class Excel
 {
-    public static List<(string file1, int percentage1, string file2, int percentage2)> ReadFilePairs(string filePath)
+    public static List<(string file1, int percentage1, string file2, int percentage2, int idx)> ReadFilePairs(string filePath)
     {
-        List<(string file1, int percentage1, string file2, int percentage2)> pairs = new List<(string file1, int percentage1, string file2, int percentage2)>();
+        List<(string file1, int percentage1, string file2, int percentage2,int idx)> pairs = new List<(string file1, int percentage1, string file2, int percentage2, int idx)>();
 
         //check if the file exists
         if (!File.Exists(filePath))
@@ -45,12 +45,23 @@ public class Excel
                 {
                     if (parts2.Length >= 2 && int.TryParse(parts2[1], out percentage2))
                     {
-                        pairs.Add((parts1[0].Trim(), percentage1, parts2[0].Trim(), percentage2));
-                    }
+                        pairs.Add((parts1[0].Trim(), percentage1, parts2[0].Trim(), percentage2,row));
+                    } 
                 }
             }
         }
 
         return pairs;
     }
+    public static ExcelPackage GetPackage(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            Console.WriteLine("File does not exist.");
+            return null;
+        }
+
+        return new ExcelPackage(new FileInfo(filePath));
+    }
+
 }

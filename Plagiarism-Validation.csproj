@@ -84,6 +84,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MST_Graph.cs" />
+    <Compile Include="HelperMethods.cs" />
     <Compile Include="MST.cs" />
     <Compile Include="Excel.cs" />
     <Compile Include="graph.cs" />

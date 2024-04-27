@@ -9,8 +9,9 @@ namespace Plagiarism_Validation
     class MST
     {
         static int[] id;
-        static Tuple<long, Tuple<int, int>>[] p;
+        public Tuple<long, Tuple<int, int, int>>[] p;
         public List<Tuple<long, Tuple<int, int>>> result;
+        public List<int> idx;
 
 
         public void Initialize(int size)
@@ -35,41 +36,47 @@ namespace Plagiarism_Validation
             int q = Root(y);
             id[p] = id[q];
         }
-        public long Kruskal(Tuple<long, Tuple<int, int>>[] p)
+        public long Kruskal(Tuple<long, Tuple<int, int, int>>[] p)
         {
             int x, y;
             long cost, maxCost = 0;
+            int index = 0;
             // In the constructor or wherever you initialize 'result'
             result = new List<Tuple<long, Tuple<int, int>>>();
+            idx = new List<int>();
             for (int i = 0; i < p.Length; ++i)
             {
                 // Selecting edges one by one in increasing order from the beginning
                 x = p[i].Item2.Item1;
                 y = p[i].Item2.Item2;
                 cost = p[i].Item1;
+                index = p[i].Item2.Item3;
                 // Check if the selected edge is creating a cycle or not
                 if (Root(x) != Root(y))
                 {
                     maxCost += cost;
                     Union(x, y);
                     result.Add(new Tuple<long, Tuple<int, int>>(cost, new Tuple<int, int>(x, y)));
+                    idx.Add(index);
                 }
             }
             return maxCost;
         }
-        public long ConstructingMST(HashSet<(string source, string destination, int weight)> edges)
+        public long ConstructingMST(HashSet<(string source, string destination, int weight, int index)> edges)
         {
-            // Initialize a list to store edges in the format (weight, (source, destination))
-            List<Tuple<long, Tuple<int, int>>> edgeList = new List<Tuple<long, Tuple<int, int>>>();
+            // Initialize a list to store edges in the format (weight, (source, destination, index))
+            List<Tuple<long, Tuple<int, int, int>>> edgeList = new List<Tuple<long, Tuple<int, int, int>>>();
 
-            // Convert edge format from (source, destination, weight) to (weight, (source, destination))
+            // Convert edge format from (source, destination, weight) to (weight, (source, destination, index))
             foreach (var edge in edges)
             {
                 int source = GetNodeId(edge.source);
                 int destination = GetNodeId(edge.destination);
                 int weight = edge.weight;
-                edgeList.Add(new Tuple<long, Tuple<int, int>>(weight, new Tuple<int, int>(source, destination)));
+                int index = edge.index;
+                edgeList.Add(new Tuple<long, Tuple<int, int, int>>(weight, new Tuple<int, int, int>(source, destination, index)));
             }
+
 
             // Sort edges by weight in descending order
             edgeList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
@@ -103,6 +110,10 @@ namespace Plagiarism_Validation
                 nodeIdMap[nodeName] = nodeIdMap.Count;
             }
             return nodeIdMap[nodeName];
+        }
+        public int getResultSize()
+        {
+            return idx.ToArray().Length;
         }
 
    
