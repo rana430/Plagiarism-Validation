@@ -1,10 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Plagiarism_Validation
 {
-    public class GraphBuilder
+    class Graph
     {
+
+        public List<Node> nodes;
+        public List<Edge> edges;
+
+        public Graph()
+        {
+            nodes = new List<Node>();
+            edges = new List<Edge>();
+
         public string root_node;
         public Dictionary<KeyValuePair<string, string>, int> edgesDFS;
         public Dictionary<string, char> color;
@@ -83,6 +95,10 @@ namespace Plagiarism_Validation
             {
                 Console.WriteLine($"From {edge.source} to {edge.destination} with weight {edge.weight}");
             }
+
         }
+        
+     
+        
     }
 }
