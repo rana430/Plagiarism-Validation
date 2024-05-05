@@ -84,11 +84,15 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Edge.cs" />
+    <Compile Include="Graph.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="Group_Stat.cs" />
     <Compile Include="MST_Graph.cs" />
     <Compile Include="HelperMethods.cs" />
     <Compile Include="MST.cs" />
     <Compile Include="Excel.cs" />
-    <Compile Include="graph.cs" />
+    <Compile Include="graphBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

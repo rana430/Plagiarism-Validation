@@ -1,37 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Plagiarism_Validation
 {
-    public class GraphBuilder
+    class Graph
     {
-        public HashSet<(string source, string destination, int weight)> edges;
+        public List<Node> nodes;
+        public List<Edge> edges;
 
-        public GraphBuilder()
+        public Graph()
         {
-            edges = new HashSet<(string, string, int)>();
+            nodes = new List<Node>();
+            edges = new List<Edge>();
         }
-
-        public void BuildGraph(List<(string file1, int percentage1, string file2, int percentage2,int index)> pairs)
-        {
-            foreach (var (file1, percentage1, file2, percentage2, index) in pairs)
-            {
-                AddEdge(file1, file2, percentage1);
-                AddEdge(file2, file1, percentage2);  
-            }
-        }
-
-        private void AddEdge(string source, string destination, int weight)
-        {
-            edges.Add((source, destination, weight));
-        }
-
-        public void PrintGraph()
-        {
-            foreach (var edge in edges)
-            {
-                Console.WriteLine($"From {edge.source} to {edge.destination} with weight {edge.weight}");
-            }
-        }
+        
+     
+        
     }
 }
