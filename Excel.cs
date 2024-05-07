@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using OfficeOpenXml; // Include EPPlus namespace
+using System.Text.RegularExpressions;
 
 namespace Plagiarism_Validation
 {
@@ -51,8 +52,8 @@ namespace Plagiarism_Validation
                             int.TryParse(parts2[1], out percentage2) &&
                             int.TryParse(parts3[0], out lineMatches))
                         {
-                            Node source = new Node(parts1[0].Trim(), ExtractId(parts1[0].Trim()));
-                            Node destination = new Node(parts2[0].Trim(), ExtractId(parts2[0].Trim()));
+                            Node source = new Node(parts1[0].Trim(), ParseId(parts1[0].Trim()));
+                            Node destination = new Node(parts2[0].Trim(), ParseId(parts2[0].Trim()));
 
                             // Create an Edge object and add it to the list
                             Edge edge = new Edge(lineMatches, percentage1, percentage2, source, destination,row);
@@ -95,6 +96,27 @@ namespace Plagiarism_Validation
             int id = int.Parse(idString);
 
             return id;
+        }
+
+        public static int ParseId(string input)
+        {
+            // Regular expression to extract the ID
+            string pattern = @"(\d+)/";
+
+            // Match the pattern in the input string
+            Match match = Regex.Match(input, pattern);
+
+            if (match.Success)
+            {
+                // Extract the matched ID and convert it to an integer
+                if (int.TryParse(match.Groups[1].Value, out int id))
+                {
+                    return id;
+                }
+            }
+
+            // Return -1 if parsing fails or no match is found
+            return -1;
         }
 
 

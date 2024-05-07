@@ -5,52 +5,52 @@ namespace Plagiarism_Validation
 {
     public class GraphBuilder
     {
-        public string root_node;
-        public Dictionary<KeyValuePair<string, string>, float> edgesDFS;
-        public Dictionary<string, char> color;
-        private HashSet<(string source, string destination, int weight)> edges;
-        public Dictionary<string, List<string>> adj_list;
+        public int root_node;
+        public Dictionary<KeyValuePair<int, int>, float> edgesDFS;
+        public Dictionary<int, char> color;
+        public Dictionary<int, List<int>> adj_list;
         private bool root = false;
         public GraphBuilder()
         {
-            edgesDFS = new Dictionary<KeyValuePair<string, string>, float>();
-            edges = new HashSet<(string, string, int)>();
-            color = new Dictionary<string , char>();
-            adj_list = new Dictionary<string, List<string>>();
+            edgesDFS = new Dictionary<KeyValuePair<int, int>, float>();
+            color = new Dictionary<int , char>();
+            adj_list = new Dictionary<int, List<int>>();
         }
 
-        public void BuildGraph(List<(string file1, int percentage1, string file2, int percentage2)> pairs)
+        public void BuildGraph(List<Edge> pairs)
         {
             
-            foreach (var (file1, percentage1, file2, percentage2) in pairs)
+            foreach (var pair in pairs)
             {
+                int sourceId = pair.Source.id;
+                int destinationId = pair.Destination.id;
                 if (root == false)
                 {
-                    root_node = file1;
+                    root_node = sourceId;
                     root = true;
                 }
-                color[file1] = 'w';
-                color[file2] = 'w';
-                int percentage = (percentage1 + percentage2) / 2;
-                AddEdge(file1, file2, percentage,1);
-                AddEdge(file2, file1, percentage,1);
+                color[sourceId] = 'w';
+                color[destinationId] = 'w';
+                float percentage = ((pair.firstSimilarity + pair.secondSimilarity) / 2f);
+                AddEdge(sourceId, destinationId, percentage,1);
+                AddEdge(destinationId, sourceId, percentage,1);
                 try
                 {
-                    adj_list[file1].Add(file2);
+                    adj_list[sourceId].Add(destinationId);
                 }
                 catch
                 {
-                    adj_list[file1] = new List<string>();
-                    adj_list[file1].Add(file2);
+                    adj_list[sourceId] = new List<int>();
+                    adj_list[sourceId].Add(destinationId);
                 }
                 try
                 {
-                    adj_list[file2].Add(file1);
+                    adj_list[destinationId].Add(sourceId);
                 }
                 catch
                 {
-                    adj_list[file2] = new List<string>();
-                    adj_list[file2].Add(file1);
+                    adj_list[destinationId] = new List<int>();
+                    adj_list[destinationId].Add(sourceId);
                 }
             }
             
@@ -58,33 +58,14 @@ namespace Plagiarism_Validation
 
 
         
-        public void BuildMSTGraph(List<(string file1, int percentage1, string file2, int percentage2)> pairs)
-        {
-            foreach (var (file1, percentage1, file2, percentage2) in pairs)
-            {
-                int max_percentage = Math.Max(percentage1, percentage2);
-                AddEdge(file1, file2, max_percentage);
-                AddEdge(file2, file1, max_percentage);
-            }
-        }
-
-        private void AddEdge(string source, string destination, int weight)
-        {
-            edges.Add((source, destination, weight));
-        }
+     
 
     
-        private void AddEdge(string source, string destination, float weight , short dfs)
+        private void AddEdge(int source, int destination, float weight , short dfs)
         {
-            KeyValuePair<string, string> key = new KeyValuePair<string, string>(source, destination);
+            KeyValuePair<int, int> key = new KeyValuePair<int, int>(source, destination);
             edgesDFS[key] = weight;
         }
-        public void PrintGraph()
-        {
-            foreach (var edge in edges)
-            {
-                Console.WriteLine($"From {edge.source} to {edge.destination} with weight {edge.weight}");
-            }
-        }
+        
     }
 }
