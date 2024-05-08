@@ -17,7 +17,7 @@ namespace Plagiarism_Validation
             // Read the Excel file using the Excel class
             Excel.Read(filePath);*/
 
-            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Easy\2-Input.xlsx";
+            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\2-Input.xlsx";
             //Console.WriteLine("hello");
             // Read the file pairs and percentages from the Excel file
             List<Edge> pairs = Excel.ReadFilePairs(filePath);
@@ -29,22 +29,40 @@ namespace Plagiarism_Validation
             //}
             /*MST_Graph mst_graph = new MST_Graph();
             mst_graph.BuildMSTGraph(pairs);
-            mst_graph.PrintGraph();
+           // mst_graph.PrintGraph();
 
             // Print the graph (optional)
             //graphBuilder.PrintGraph();
             MST test = new MST();
             long cost = test.ConstructingMST(mst_graph.edges);
             Console.WriteLine(cost);
-            foreach (var i in test.result)
+            *//*foreach (var i in test.result)
             {
                 Console.WriteLine("{0} ({1}, {2})", i.Item1, test.nodeIdMap.FirstOrDefault(x => x.Value == i.Item2.Item1).Key, test.nodeIdMap.FirstOrDefault(x => x.Value == i.Item2.Item2).Key);
+            }*//*
+            List<Component> components = test.GetComponents();
+            
+            foreach (var i in components)
+            {
+                i.SortEdgesByLineMatches();
+                i.PrintComponent();
             }*/
             //test group stat
+            GraphAnalyzer graph = new GraphAnalyzer();
+            graph.buildGraph(pairs);
+            List<Tuple<List<int>, float, int>> sums = graph.ConnectedComponentsWithSumAndEdgeCount();
+            foreach (var i in sums)
+            {
+                Console.Write("Component: ");
+                foreach (var e in i.Item1)
+                {
+                    Console.Write($"{e} ");
+                }
+                Console.WriteLine();
+                Console.WriteLine($"Sum of weights: {i.Item2/(i.Item3*2)}");
+                Console.WriteLine($"Number of edges: {i.Item3}");
+            }
 
-            Group_Stat group_Stat = new Group_Stat(pairs);
-            List<KeyValuePair<List<int>, float>> stat = group_Stat.CalculateStats();
-            group_Stat.PrintConnectedComponents();
         }
     }
 }

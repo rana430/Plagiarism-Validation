@@ -69,7 +69,7 @@ namespace Plagiarism_Validation
         public static int ExtractId(string input)
         {
             // Find the index of "D:/Source/"
-            int startIndex = input.IndexOf("D:/SOURCE/");
+            int startIndex = input.IndexOf("D:/Source/");
 
             // Ensure that "D:/Source/" is found
             //if (startIndex == -1)

@@ -7,8 +7,8 @@ namespace Plagiarism_Validation
     public class MST
     {
         private int[] id;
-        public Tuple<long, Tuple<int, int, int>>[] p;
-        public List<Tuple<long, Tuple<int, int>>> result;
+        public Tuple<long, Edge>[] p;
+        public List<Tuple<long, Edge>> result;
         public List<int> idx;
         public Dictionary<string, int> nodeIdMap;
 
@@ -41,27 +41,27 @@ namespace Plagiarism_Validation
             id[p] = id[q];
         }
 
-        public long Kruskal(Tuple<long, Tuple<int, int, int>>[] p)
+        public long Kruskal(Tuple<long, Edge>[] p)
         {
             int x, y;
             long cost, maxCost = 0;
             int index = 0;
 
-            result = new List<Tuple<long, Tuple<int, int>>>();
+            result = new List<Tuple<long,Edge>>();
             idx = new List<int>();
 
             for (int i = 0; i < p.Length; ++i)
             {
-                x = p[i].Item2.Item1;
-                y = p[i].Item2.Item2;
+                x = p[i].Item2.Source.id;
+                y = p[i].Item2.Destination.id;
                 cost = p[i].Item1;
-                index = p[i].Item2.Item3;
+                index = p[i].Item2.lineMatches;
 
                 if (Root(x) != Root(y))
                 {
                     maxCost += cost;
                     Union(x, y);
-                    result.Add(new Tuple<long, Tuple<int, int>>(cost, new Tuple<int, int>(x, y)));
+                    result.Add(new Tuple<long, Edge>(cost, p[i].Item2));
                     idx.Add(index);
                 }
             }
@@ -70,7 +70,7 @@ namespace Plagiarism_Validation
 
         public long ConstructingMST(List<Edge> edges)
         {
-            List<Tuple<long, Tuple<int, int, int>>> edgeList = new List<Tuple<long, Tuple<int, int, int>>>();
+            List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();
 
             foreach (var edge in edges)
             {
@@ -78,25 +78,17 @@ namespace Plagiarism_Validation
                 int destination = GetNodeId(edge.Destination.path);
                 int weight = Math.Max(edge.firstSimilarity, edge.secondSimilarity);
                 int index = edge.lineMatches;
-                edgeList.Add(new Tuple<long, Tuple<int, int, int>>(weight, new Tuple<int, int, int>(source, destination, index)));
+                edgeList.Add(new Tuple<long, Edge>(weight, edge));
             }
 
-            edgeList.Sort((x, y) =>
-            {
-                int weightComparison = y.Item1.CompareTo(x.Item1);
-                if (weightComparison == 0)
-                {
-                    int lineMatchesComparison = y.Item2.Item3.CompareTo(x.Item2.Item3);
-                    if (lineMatchesComparison == 0)
-                    {
-                        return y.Item1.CompareTo(x.Item1);
-                    }
-                    return lineMatchesComparison;
-                }
-                return weightComparison;
-            });
+            edgeList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
+
 
             p = edgeList.ToArray();
+            foreach( var i in p)
+            {
+                Console.WriteLine($"    Node 1: {i.Item2.Source.id}, Node 2: {i.Item2.Destination.id}, Weight: {i.Item2.lineMatches}, cost: {i.Item1}");
+            }
 
             Initialize(p.Length);
             long maxCost = Kruskal(p);
@@ -122,5 +114,43 @@ namespace Plagiarism_Validation
         {
             return idx.Count;
         }
+        public void printResult()
+        {
+            foreach (var tuple in result)
+            {
+                Console.WriteLine($"{tuple.Item1}, {tuple.Item2}");
+            }
+        }
+        public List<Component> GetComponents()
+        {
+            // Create a dictionary to store components indexed by their root
+            Dictionary<int, Component> rootToComponent = new Dictionary<int, Component>();
+
+            foreach (var tuple in result)
+            {
+                int rootX = Root(tuple.Item2.Source.id);
+                int rootY = Root(tuple.Item2.Destination.id);
+
+                // If both nodes belong to the same root, add the tuple to the component
+                if (rootX == rootY)
+                {
+                    int root = rootX;
+                    if (!rootToComponent.ContainsKey(root))
+                    {
+                        rootToComponent[root] = new Component(0, new List<Tuple<long, Edge>>());
+                    }
+                    rootToComponent[root].AddTuple(tuple);
+                }
+            }
+
+            // Convert the dictionary values to a list of components
+            List<Component> components = rootToComponent.Values.ToList();
+            components.Sort((c1, c2) => c1.weight.CompareTo(c2.weight));
+
+            return components;
+        }
+
+
+
     }
 }

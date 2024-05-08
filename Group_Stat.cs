@@ -37,7 +37,7 @@ namespace Plagiarism_Validation
         {
             visited[node] = true;
             componentNodes.Add(node);
-            float weightSum = 0;
+            float weightSum = 0.0f;
 
             foreach (var neighbor in Graph.adj_list[node])
             {
@@ -47,7 +47,7 @@ namespace Plagiarism_Validation
                     weightSum += DepthFirstSearch(neighbor, visited, componentNodes);
                 }
             }
-
+            Console.WriteLine(weightSum);
             return weightSum;
         }
 
@@ -55,12 +55,14 @@ namespace Plagiarism_Validation
         public void PrintConnectedComponents()
         {
             List<KeyValuePair<List<int>, float>> connectedComponents = CalculateStats();
-
+            
             Console.WriteLine("Connected Components:");
             foreach (var component in connectedComponents)
             {
+                
                 Console.WriteLine("Nodes: " + string.Join(", ", component.Key));
                 Console.WriteLine("Sum of Weights: " + component.Value);
+                Console.WriteLine(component.Key.Count);
                 Console.WriteLine();
             }
         }
