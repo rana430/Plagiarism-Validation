@@ -14,7 +14,7 @@ namespace Plagiarism_Validation
 
         public void BuildMSTGraph(List<Edge> pairs)
         {
-            foreach (var edge in pairs)
+            foreach (var edge in pairs)//O(e)
             {
                 AddEdge(edge);
                 AddEdge(new Edge(edge.lineMatches, edge.secondSimilarity, edge.firstSimilarity, edge.Destination, edge.Source, edge.rowNumber));

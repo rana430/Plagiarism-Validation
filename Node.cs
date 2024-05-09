@@ -10,11 +10,14 @@ namespace Plagiarism_Validation
     {
         public string path;
         public int id;
-
-        public Node(string Path, int Id)
+        public string idString;
+        
+        public Node(string Path, String Id)
         {
             path = Path;
-            id = Id;
+            idString = Id;
+            id = StringIdAssigner.GetId(Id);
         }
+       
     }
 }

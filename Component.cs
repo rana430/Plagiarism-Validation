@@ -37,7 +37,7 @@ namespace Plagiarism_Validation
         {
             edges.Add(tuple);
         }
-        public void printStatComponent()
+        public void printStatComponent()// for printing group stat in o(e)
         {
             foreach (var node in edges)
             {
@@ -53,17 +53,18 @@ namespace Plagiarism_Validation
             foreach (var node in nodes)
             {
 
-                Console.WriteLine($"    Node 1: {node.Item2.Source.id}, Node 2: {node.Item2.Destination.id}, Weight: {node.Item2.lineMatches}");
+                Console.WriteLine($"    Node 1: {node.Item2.Source.idString}, Node 2: {node.Item2.Destination.idString}, Weight: {node.Item2.lineMatches}");
             }
             Console.WriteLine("****************************");
         }
-        public void SortEdgesByLineMatches()
+        public void SortEdgesByLineMatches()//O(E)
         {
             nodes.Sort((x, y) => y.Item2.lineMatches.CompareTo(x.Item2.lineMatches));
         }
+        
         public void calcWeight()
         {
-            foreach(var edge in nodes)
+            foreach(var edge in nodes)//O(E)
             {
                 weight += edge.Item1;
             }

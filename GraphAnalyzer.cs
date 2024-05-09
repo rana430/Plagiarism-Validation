@@ -28,10 +28,10 @@ namespace Plagiarism_Validation
             }
         }
 
-        public List<Tuple<List<int>, float, int>> ConnectedComponentsWithSumAndEdgeCount()
+        public List<GroupStatComponent> ConnectedComponentsWithSumAndEdgeCount()
         {
             var visited = new Dictionary<int, bool>();
-            var componentsWithSumAndEdgeCount = new List<Tuple<List<int>, float, int>>();
+            var componentsWithSumAndEdgeCount = new List<GroupStatComponent>();
 
             // Initialize all vertices as not visited
             foreach (var vertex in graph.Keys)
@@ -47,7 +47,7 @@ namespace Plagiarism_Validation
                     float sum = 0;
                     int edgeCount = 0;
                     DFS(vertex, visited, ref componentVertices, ref sum, ref edgeCount);
-                    componentsWithSumAndEdgeCount.Add(new Tuple<List<int>, float, int>(componentVertices, sum, edgeCount / 2));
+                    componentsWithSumAndEdgeCount.Add(new GroupStatComponent(componentVertices, sum, edgeCount / 2));
                 }
             }
 

@@ -52,9 +52,12 @@ namespace Plagiarism_Validation
                             int.TryParse(parts2[1], out percentage2) &&
                             int.TryParse(parts3[0], out lineMatches))
                         {
-                            Node source = new Node(parts1[0].Trim(), ParseId(parts1[0].Trim()));
-                            Node destination = new Node(parts2[0].Trim(), ParseId(parts2[0].Trim()));
-
+                            Node source = new Node(parts1[0].Trim(), ExtractId(parts1[0].Trim()));
+                            Node destination = new Node(parts2[0].Trim(), ExtractId(parts2[0].Trim()));
+                            Console.Write(source.id);
+                            Console.Write("  ");
+                            Console.WriteLine(source.idString);
+                            Console.Write(destination.id);Console.Write("  "); Console.WriteLine(destination.idString);
                             // Create an Edge object and add it to the list
                             Edge edge = new Edge(lineMatches, percentage1, percentage2, source, destination,row);
                             pairs.Add(edge);
@@ -66,36 +69,25 @@ namespace Plagiarism_Validation
             return pairs;
         }
 
-        public static int ExtractId(string input)
+        public static string ExtractId(string input)
         {
-            // Find the index of "D:/Source/"
-            int startIndex = input.IndexOf("D:/Source/");
-
-            // Ensure that "D:/Source/" is found
-            //if (startIndex == -1)
-            //{
-            //    throw new ArgumentException("Invalid input format. 'D:/Source/' not found.");
-            //}
-
-            // Start extraction after "D:/Source/"
-            startIndex += "D:/Source/".Length;
-
-            // Find the index of the next '/'
-            int nextSlashIndex = input.IndexOf('/', startIndex);
-
-            // Ensure that next '/' is found
-            if (nextSlashIndex == -1)
+            string id = "";
+            foreach( var c in input)
             {
-                throw new ArgumentException("Invalid input format. '/' not found after 'D:/Source/'.");
+                if (c >= '0' && c <= '9')
+                {
+                    // Append the digit to the ID string
+                    id += c;
+                }
+                else
+                {
+                    if (id.Length > 0) break;
+                }
+
+
             }
-
-            // Extract the substring between "D:/Source/" and the next '/'
-            string idString = input.Substring(startIndex, nextSlashIndex - startIndex);
-
-            // Parse the ID string to integer
-            int id = int.Parse(idString);
-
             return id;
+
         }
 
         public static int ParseId(string input)
