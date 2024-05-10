@@ -54,10 +54,10 @@ namespace Plagiarism_Validation
                         {
                             Node source = new Node(parts1[0].Trim(), ExtractId(parts1[0].Trim()));
                             Node destination = new Node(parts2[0].Trim(), ExtractId(parts2[0].Trim()));
-                            Console.Write(source.id);
+                            /*Console.Write(source.id);
                             Console.Write("  ");
                             Console.WriteLine(source.idString);
-                            Console.Write(destination.id);Console.Write("  "); Console.WriteLine(destination.idString);
+                            Console.Write(destination.id);Console.Write("  "); Console.WriteLine(destination.idString);*/
                             // Create an Edge object and add it to the list
                             Edge edge = new Edge(lineMatches, percentage1, percentage2, source, destination,row);
                             pairs.Add(edge);

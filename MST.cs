@@ -6,22 +6,25 @@ namespace Plagiarism_Validation
 {
     public class MST
     {
-        private int[] id;
+        public int[] id;
         public Tuple<long, Edge>[] p;
         public List<Tuple<long, Edge>> result;
         public List<int> idx;
         public Dictionary<string, int> nodeIdMap;
+        public List<Component> MstComponents = new List<Component>();
 
         public MST()
         {
             nodeIdMap = new Dictionary<string, int>();
         }
 
-        public void Initialize(int size)
+        public void Initialize(int size)//O()
         {
             id = new int[size];
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < size ; ++i)
+            {
                 id[i] = i;
+            }
         }
 
         public int Root(int x)
@@ -41,62 +44,63 @@ namespace Plagiarism_Validation
             id[p] = id[q];
         }
 
-        public long Kruskal(Tuple<long, Edge>[] p)
+        public long Kruskal(Tuple<long, Edge>[] p, Component component)//O(E log N)
         {
             int x, y;
             long cost, maxCost = 0;
-            int index = 0;
-
-            result = new List<Tuple<long,Edge>>();
-            idx = new List<int>();
-
+            component.nodes = new List<Tuple<long, Edge>>();
+            
             for (int i = 1; i < p.Length; ++i)
             {
                 x = p[i].Item2.Source.id;
                 y = p[i].Item2.Destination.id;
                 cost = p[i].Item1;
-                index = p[i].Item2.lineMatches;
-
                 if (Root(x) != Root(y))
                 {
                     maxCost += cost;
                     Union(x, y);
-                    result.Add(new Tuple<long, Edge>(cost, p[i].Item2));
-                    idx.Add(index);
+                    component.nodes.Add(new Tuple<long, Edge>(cost, p[i].Item2));
                 }
             }
             return maxCost;
         }
 
-        public long ConstructingMST(List<Edge> edges) //O(e log e)
+        public long ConstructingMST(List<Component> components,List<Edge>edges) //sumation of C (O(e log e))
         {
-            List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();
-
-            foreach (var edge in edges)// O(e)
+            
+            MstComponents = components;
+            long maxCost=0;
+            Initialize(edges.Count);//O(e)
+            foreach (var component in components)//O(C)
             {
-                int source = edge.Source.id;
-                int destination = edge.Destination.id;
-                int weight = Math.Max(edge.firstSimilarity, edge.secondSimilarity);
-                int index = edge.lineMatches;
-                edgeList.Add(new Tuple<long, Edge>(weight, edge));
+                List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();
+                List<Tuple<float, Edge>> componentEdge = new List<Tuple<float, Edge>>();
+                componentEdge= component.edges;
+                foreach (var item in componentEdge)// O(e)
+                {
+                    int weight = Math.Max(item.Item2.firstSimilarity, item.Item2.secondSimilarity);
+                    edgeList.Add(new Tuple<long, Edge>(weight, item.Item2));
+                }
+
+                edgeList.Sort((x, y) => y.Item1.CompareTo(x.Item1)); //o(e log e)
+
+                p = new Tuple<long, Edge>[edgeList.Count];
+                p = edgeList.ToArray();//O(e)
+                /* foreach( var i in p)
+                 {
+                     Console.WriteLine($"    Node 1: {i.Item2.Source.id}, Node 2: {i.Item2.Destination.id}, Weight: {i.Item2.lineMatches}, cost: {i.Item1}");
+                 }
+     */
+                Console.WriteLine(p.Length);
+
+                
+                maxCost += Kruskal(p,component);//O(e log N)
+
             }
-
-            edgeList.Sort((x, y) => y.Item1.CompareTo(x.Item1)); //o(e log e)
-
-
-            p = edgeList.ToArray();//O(e)
-           /* foreach( var i in p)
-            {
-                Console.WriteLine($"    Node 1: {i.Item2.Source.id}, Node 2: {i.Item2.Destination.id}, Weight: {i.Item2.lineMatches}, cost: {i.Item1}");
-            }
-*/
-            Initialize(p.Length);//O(e)
-            long maxCost = Kruskal(p);//O(e log N)
-
             return maxCost;
         }
 
-        public int GetNodeId(string nodeName)
+        /*public int GetNodeId(string nodeName)
         {
             if (!nodeIdMap.ContainsKey(nodeName))
             {
@@ -120,34 +124,14 @@ namespace Plagiarism_Validation
             {
                 Console.WriteLine($"{tuple.Item1}, {tuple.Item2}");
             }
-        }
-        public List<Component> GetComponents()
+        }*/
+        public List<Component> GetComponents() //O(C)
         {
-            // Create a dictionary to store components indexed by their root
-            Dictionary<int, Component> rootToComponent = new Dictionary<int, Component>();
-
-            foreach (var tuple in result)//O(
-            {
-                int rootX = Root(tuple.Item2.Source.id);
-                int rootY = Root(tuple.Item2.Destination.id);
-
-                // If both nodes belong to the same root, add the tuple to the component
-                if (rootX == rootY)
-                {
-                    int root = rootX;
-                    if (!rootToComponent.ContainsKey(root))//O(1)
-                    {
-                        rootToComponent[root] = new Component(0, new List<Tuple<long, Edge>>());
-                    }
-                    rootToComponent[root].AddTuple(tuple);//O(1)
-                }
-            }
-
+          
             // Convert the dictionary values to a list of components
-            List<Component> components = rootToComponent.Values.ToList();//O(C)
-            components.Sort((c1, c2) => c1.weight.CompareTo(c2.weight));//O(C)
+            MstComponents.Sort((c1, c2) => c2.avgSim.CompareTo(c1.avgSim));//O(C)
 
-            return components;
+            return MstComponents;
         }
 
 

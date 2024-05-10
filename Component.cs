@@ -10,9 +10,9 @@ namespace Plagiarism_Validation
     {
         public long weight=0;
         public int lineMatches;
-        public List<Tuple<long, Edge>> nodes;
+        public List<Tuple<long, Edge>> nodes;//edges of mst
         public float avgSim = 0.0f;
-        public List<Tuple<float, Edge>> edges;
+        public List<Tuple<float, Edge>> edges;// edges of group stat
 
 
         public Component(int weight, List<Tuple<long, Edge>> tuples)
@@ -23,7 +23,7 @@ namespace Plagiarism_Validation
             nodes = tuples;
 
         }
-        public Component (float avg, List<Tuple<float, Edge>> edge)
+        public Component(float avg, List<Tuple<float, Edge>> edge)
         {
             avgSim = avg;
             edges = new List<Tuple<float, Edge>>();
@@ -42,7 +42,7 @@ namespace Plagiarism_Validation
             foreach (var node in edges)
             {
 
-                Console.WriteLine($"    Node 1: {node.Item2.Source.id}, Node 2: {node.Item2.Destination.id}, Weight: {node.Item2.lineMatches}");
+                Console.WriteLine($"    Node 1: {node.Item2.Source.idString}, Node 2: {node.Item2.Destination.idString}, Weight: {node.Item2.lineMatches}");
             }
             Console.WriteLine("****************************");
         }
