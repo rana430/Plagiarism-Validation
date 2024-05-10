@@ -52,8 +52,8 @@ namespace Plagiarism_Validation
                             int.TryParse(parts2[1], out percentage2) &&
                             int.TryParse(parts3[0], out lineMatches))
                         {
-                            Node source = new Node(parts1[0].Trim(), ExtractId(parts1[0].Trim()));
-                            Node destination = new Node(parts2[0].Trim(), ExtractId(parts2[0].Trim()));
+                            Node source = new Node(cellValue1, ExtractId(parts1[0].Trim()));
+                            Node destination = new Node(cellValue2, ExtractId(parts2[0].Trim()));
                             /*Console.Write(source.id);
                             Console.Write("  ");
                             Console.WriteLine(source.idString);

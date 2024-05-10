@@ -5,86 +5,82 @@ namespace Plagiarism_Validation
 {
     public class GraphAnalyzer
     {
-        private Dictionary<int, List<Tuple<int, float,Edge>>> graph;
-        public List<Tuple<float, Edge>> componentEdges;
-        public Component component;
+        private Dictionary<int, HashSet<Edge>> graph;
+        private HashSet<int> visited;
+        private List<Tuple<float, Edge>> componentEdges;
+
         public List<Component> groupComponents;
+        public int maxId;
+
         public GraphAnalyzer()
         {
-            graph = new Dictionary<int, List<Tuple<int, float,Edge>>>();
-            
+            maxId = StringIdAssigner.currentId;
+            graph = new Dictionary<int, HashSet<Edge>>();
+            visited = new HashSet<int>();
         }
+
         public void buildGraph(List<Edge> pairs)
         {
-            foreach (var i in pairs)
+            foreach (var edge in pairs)
             {
-                int sourceId = i.Source.id;
-                int destinationId = i.Destination.id;
-                float weight = (i.firstSimilarity + i.secondSimilarity) / 2.0f;
-                //Console.WriteLine($"First similarity: {i.firstSimilarity}, Second Similarity: {i.secondSimilarity}, Weight: {weight}");
-                if (!graph.ContainsKey(sourceId))
-                    graph[sourceId] = new List<Tuple<int, float,Edge>>();
-                if (!graph.ContainsKey(destinationId))
-                    graph[destinationId] = new List<Tuple<int, float,Edge>>();
+                int sourceId = edge.Source.id;
+                int destinationId = edge.Destination.id;
+                float weight = (edge.firstSimilarity + edge.secondSimilarity) / 2.0f;
 
-                graph[sourceId].Add(new Tuple<int, float, Edge>(destinationId, weight,i));
-                graph[destinationId].Add(new Tuple<int, float, Edge>(sourceId, weight,i));
+                if (!graph.ContainsKey(sourceId))
+                    graph[sourceId] = new HashSet<Edge>();
+
+                if (!graph.ContainsKey(destinationId))
+                    graph[destinationId] = new HashSet<Edge>();
+
+                graph[sourceId].Add(edge);
+                graph[destinationId].Add(edge);
             }
         }
 
         public List<GroupStatComponent> ConnectedComponentsWithSumAndEdgeCount()
         {
-            var visited = new Dictionary<int, bool>();
             var componentsWithSumAndEdgeCount = new List<GroupStatComponent>();
             groupComponents = new List<Component>();
 
-            // Initialize all vertices as not visited
             foreach (var vertex in graph.Keys)
             {
-                visited[vertex] = false;
-            }
-
-            foreach (var vertex in graph.Keys)
-            {
-                if (!visited[vertex])
+                if (!visited.Contains(vertex))
                 {
-                    var componentVertices = new List<int>();
+                    var componentVertices = new SortedSet<int>();
                     float sum = 0;
                     int edgeCount = 0;
                     componentEdges = new List<Tuple<float, Edge>>();
-                    DFS(vertex, visited, ref componentVertices, ref sum, ref edgeCount);
+
+                    DFS(vertex, ref componentVertices, ref sum, ref edgeCount);
+
                     componentsWithSumAndEdgeCount.Add(new GroupStatComponent(componentVertices, sum, edgeCount));
-                    component = new Component((float)(sum / edgeCount), componentEdges);
-                    groupComponents.Add(component);
+                    groupComponents.Add(new Component((float)(sum / edgeCount), componentEdges));
                 }
             }
 
             return componentsWithSumAndEdgeCount;
         }
 
-        private void DFS(int v, Dictionary<int, bool> visited, ref List<int> componentVertices, ref float componentSum, ref int edgeCount)
+        private void DFS(int v, ref SortedSet<int> componentVertices, ref float componentSum, ref int edgeCount)
         {
-            visited[v] = true;
-            componentVertices.Add(v); // Add the current vertex to the component
-                                      // Traverse through all adjacent vertices
-            foreach (var neighbor in graph[v])
+            visited.Add(v);
+            componentVertices.Add(v);
+
+            foreach (var edge in graph[v])
             {
-                
-                int neighborVertex = neighbor.Item1;
-                float weight = neighbor.Item2;
-                componentSum += weight; // Add weight of the current edge
-                edgeCount++; // Increment edge count
-                componentEdges.Add(new Tuple<float, Edge>(weight, neighbor.Item3));
-                // If neighbor is not visited, recurse on it
-                if (!visited[neighborVertex])
+                int neighborVertex = (edge.Source.id == v) ? edge.Destination.id : edge.Source.id;
+                float weight = (edge.Source.id == v) ? edge.firstSimilarity : edge.secondSimilarity;
+
+                componentSum += weight;
+                edgeCount++;
+                componentEdges.Add(new Tuple<float, Edge>(weight, edge));
+
+                if (!visited.Contains(neighborVertex))
                 {
-                    DFS(neighborVertex, visited, ref componentVertices, ref componentSum, ref edgeCount);
+                    DFS(neighborVertex, ref componentVertices, ref componentSum, ref edgeCount);
                 }
             }
         }
-
-
-
-
     }
 }

@@ -13,14 +13,15 @@ namespace Plagiarism_Validation
         public List<Tuple<long, Edge>> nodes;//edges of mst
         public float avgSim = 0.0f;
         public List<Tuple<float, Edge>> edges;// edges of group stat
+        public List<Edge> hashEdges = new List<Edge>();
 
 
         public Component(int weight, List<Tuple<long, Edge>> tuples)
         {
             this.weight = weight;
- 
             nodes = new List<Tuple<long, Edge>>();
             nodes = tuples;
+
 
         }
         public Component(float avg, List<Tuple<float, Edge>> edge)
@@ -53,15 +54,47 @@ namespace Plagiarism_Validation
             foreach (var node in nodes)
             {
 
-                Console.WriteLine($"    Node 1: {node.Item2.Source.idString}, Node 2: {node.Item2.Destination.idString}, Weight: {node.Item2.lineMatches}");
+                Console.WriteLine($"    file 1: {node.Item2.Source.path}, file 2: {node.Item2.Destination.path}, Line Matches: {node.Item2.lineMatches}");
             }
             Console.WriteLine("****************************");
         }
-        public void SortEdgesByLineMatches()//O(E)
+
+        /*public void printComponnentExcel()
         {
-            nodes.Sort((x, y) => y.Item2.lineMatches.CompareTo(x.Item2.lineMatches));
+            foreach(var i in nodes)
+            {
+                hashEdges.Add(i.Item2);
+            }
+            ExcelWriter excelWriter = new ExcelWriter();
+            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Easy\MST.xlsx";
+            excelWriter.WriteToExcel(filePath, hashEdges);
+
+        }*/
+        public void SortEdgesByLineMatches()
+        {
+            nodes.Sort((x, y) =>
+            {
+                // First, compare line matches
+                int lineMatchesComparison = y.Item2.lineMatches.CompareTo(x.Item2.lineMatches);
+
+                // If line matches are equal, compare max similarity
+                if (lineMatchesComparison == 0)
+                {
+                    // If max similarity is also equal, compare by other criteria (if available)
+                    if (x.Item2.maxSimilarity == y.Item2.maxSimilarity)
+                    {
+                       
+                        return 0;
+                    }
+                    // Compare by max similarity
+                    return y.Item2.maxSimilarity.CompareTo(x.Item2.maxSimilarity);
+                }
+                // Compare by line matches
+                return lineMatchesComparison;
+            });
         }
-        
+
+
         public void calcWeight()
         {
             foreach(var edge in nodes)//O(E)

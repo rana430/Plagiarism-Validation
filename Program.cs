@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,59 +18,69 @@ namespace Plagiarism_Validation
             // Read the Excel file using the Excel class
             Excel.Read(filePath);*/
 
-            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Hard\2-Input.xlsx";
-            //Console.WriteLine("hello");
-            // Read the file pairs and percentages from the Excel file
-            List<Edge> pairs = Excel.ReadFilePairs(filePath);
+            // Start the stopwatch for total time
+            Stopwatch totalStopwatch = new Stopwatch();
+            totalStopwatch.Start();
 
-            //foreach (var pair in pairs)
-            //{
-            //    //Console.WriteLine("hello");
-            //    Console.WriteLine($"File1: {pair.Source}, Percentage1: {pair.firstSimilarity}%, File2: {pair.Source}, Percentage2: {pair.secondSimilarity}%");
-            //}
+            // Start the stopwatch for GroupAnalyzer time
+            Stopwatch groupAnalyzerStopwatch = new Stopwatch();
+            Stopwatch mstStopwatch = new Stopwatch();
             
-            //test group stat
+            
+
+            // Read pairs from file
+            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Hard\1-Input.xlsx";
+            List<Edge> pairs = Excel.ReadFilePairs(filePath);
+            mstStopwatch.Stop();
+            // Analyze groups
             GraphAnalyzer graph = new GraphAnalyzer();
             graph.buildGraph(pairs);
+            // Start the stopwatch for GroupAnalyzer time
+            groupAnalyzerStopwatch.Start();
             List<GroupStatComponent> sums = graph.ConnectedComponentsWithSumAndEdgeCount();
-            sums.Sort((x, y) => (y.avgSimSum/(y.edgeCount)).CompareTo(x.avgSimSum / (x.edgeCount)));
-            foreach (var i in sums)
-            {
-                /*Console.Write("Component: ");
-                foreach (var e in i.edges)
-                {
-                    Console.Write($"{e} ");
-                }*/
-                Console.WriteLine();
-                Console.WriteLine($"Sum of weights: {i.avgSimSum / (i.edgeCount)}");
-                Console.WriteLine($"Number of edges: {i.edges.Count}");
-            }
-            List<Component> groupStat = new List<Component>();
-            groupStat = graph.groupComponents;
+            //sort components
+            sums.Sort((x, y) => (y.avgSimSum / y.edgeCount).CompareTo(x.avgSimSum / x.edgeCount));
+            StatExcelWriter statexcelWriter = new StatExcelWriter();
+            string statOutFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\stat.xlsx";
+            statexcelWriter.WriteToExcel(statOutFilePath, sums);
 
-
-
-            //Mst test
+            // Stop the stopwatch for GroupAnalyzer time
+            groupAnalyzerStopwatch.Stop();
+            
+            // Build MST
             MST_Graph mst_graph = new MST_Graph();
             mst_graph.BuildMSTGraph(pairs);
-            // mst_graph.PrintGraph();
 
-            // Print the graph (optional)
-            //graphBuilder.PrintGraph();
+            // Start the stopwatch for MST time
+            mstStopwatch.Start();
             MST test = new MST();
-            long cost = test.ConstructingMST(groupStat, mst_graph.edges);
-            Console.WriteLine(cost);
-            //foreach (var i in test.result)
-            //{
-            //    Console.WriteLine("{0} ({1}, {2})", i.Item1, test.nodeIdMap.FirstOrDefault(x => x.Value == i.Item2.Item1).Key, test.nodeIdMap.FirstOrDefault(x => x.Value == i.Item2.Item2).Key);
-            //}
+            long cost = test.ConstructingMST(graph.groupComponents, mst_graph.edges);
             List<Component> components = test.GetComponents();
 
             foreach (var i in components)
             {
                 i.SortEdgesByLineMatches();
-                i.PrintComponent();
             }
+
+            MSTExcelWriter excelWriter = new MSTExcelWriter();
+            string outFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\MST.xlsx";
+            excelWriter.WriteToExcel(outFilePath, components);
+
+            // Stop the stopwatch for MST time
+            mstStopwatch.Stop();
+
+            // Stop the stopwatch for total time
+            totalStopwatch.Stop();
+
+            // Get the elapsed time for each component
+            long groupAnalyzerElapsedTime = groupAnalyzerStopwatch.ElapsedMilliseconds;
+            long mstElapsedTime = mstStopwatch.ElapsedMilliseconds;
+            long totalElapsedTime = totalStopwatch.ElapsedMilliseconds;
+
+            // Print the elapsed time for each component
+            Console.WriteLine($"GroupAnalyzer Time: {groupAnalyzerElapsedTime} milliseconds");
+            Console.WriteLine($"MST Time: {mstElapsedTime} milliseconds");
+            Console.WriteLine($"Total Time: {totalElapsedTime} milliseconds");
 
             //prims test 
 

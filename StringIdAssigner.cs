@@ -6,7 +6,7 @@ namespace Plagiarism_Validation
     {
         private static Dictionary<string, int> idMap = new Dictionary<string, int>();
         private static Dictionary<int, string> reverseIdMap = new Dictionary<int, string>();
-        private static int currentId = 1;
+        public static int currentId = 1;
 
         public static int GetId(string str)
         {

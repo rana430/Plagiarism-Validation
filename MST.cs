@@ -82,7 +82,21 @@ namespace Plagiarism_Validation
                     edgeList.Add(new Tuple<long, Edge>(weight, item.Item2));
                 }
 
-                edgeList.Sort((x, y) => y.Item1.CompareTo(x.Item1)); //o(e log e)
+                edgeList.Sort((x, y) =>
+                {
+                    // First, compare by weight
+                    int weightComparison = y.Item1.CompareTo(x.Item1);
+
+                    // If weights are equal, compare by line matches
+                    if (weightComparison == 0)
+                    {
+                        // Compare by line matches
+                        return y.Item2.lineMatches.CompareTo(x.Item2.lineMatches);
+                    }
+
+                    // Return the result of the weight comparison
+                    return weightComparison;
+                });//o(e log e)
 
                 p = new Tuple<long, Edge>[edgeList.Count];
                 p = edgeList.ToArray();//O(e)
@@ -91,7 +105,6 @@ namespace Plagiarism_Validation
                      Console.WriteLine($"    Node 1: {i.Item2.Source.id}, Node 2: {i.Item2.Destination.id}, Weight: {i.Item2.lineMatches}, cost: {i.Item1}");
                  }
      */
-                Console.WriteLine(p.Length);
 
                 
                 maxCost += Kruskal(p,component);//O(e log N)

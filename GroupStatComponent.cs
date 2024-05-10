@@ -8,11 +8,11 @@ namespace Plagiarism_Validation
 {
     public class GroupStatComponent
     {
-        public List<int> edges;
+        public SortedSet<int> edges;
         public float avgSimSum = 0f;
         public int edgeCount = 0;
 
-        public GroupStatComponent(List<int> Edges, float AvgSimSum, int EdgeNumber)
+        public GroupStatComponent(SortedSet<int> Edges, float AvgSimSum, int EdgeNumber)
         {
             edges = Edges;
             avgSimSum = AvgSimSum;
