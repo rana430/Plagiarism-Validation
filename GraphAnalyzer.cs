@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Plagiarism_Validation
 {
-    public class GraphAnalyzer //change its name
+    public class GraphAnalyzer
     {
         private Dictionary<int, HashSet<Edge>> graph;//adj matrix for graph
         private HashSet<int> visited;//list contains only visited nodes
@@ -45,7 +45,7 @@ namespace Plagiarism_Validation
             {
                 if (!visited.Contains(vertex))//O(V)
                 {
-                    var componentVertices = new SortedSet<string>();
+                    var componentVertices = new List<string>();
                     float sum = 0;
                     int edgeCount = 0;
                     componentEdges = new List<Tuple<float, Edge>>();//init new one for each component --we can remove float--
@@ -53,22 +53,22 @@ namespace Plagiarism_Validation
                     DFS(vertex, ref componentVertices, ref sum, ref edgeCount);//O(E)
 
                     //componentsWithSumAndEdgeCount.Add(new GroupStatComponent(componentVertices, sum, edgeCount));
-                    components.Add(new Component((float)(sum / edgeCount), componentEdges,componentVertices,edgeCount));
+                    components.Add(new Component((float)(sum), componentEdges, componentVertices, edgeCount));
                 }
             }
 
             return components;
         }
 
-        private void DFS(int v, ref SortedSet<string> componentVertices, ref float componentSum, ref int edgeCount)
+        private void DFS(int v, ref List<string> componentVertices, ref float componentSum, ref int edgeCount)
         {
             visited.Add(v);
             componentVertices.Add(StringIdAssigner.GetString(v));
 
             foreach (var edge in graph[v])
             {
-                int neighborVertex = (edge.Source.id == v) ? edge.Destination.id : edge.Source.id;//this line is bec we pass edge not destination for the graph
-                float weight = edge.edgeAvgSim;
+                int neighborVertex = (edge.Source.id == v) ? edge.Destination.id : edge.Source.id;
+                float weight = (edge.Source.id == v) ? edge.firstSimilarity : edge.secondSimilarity;
 
                 componentSum += weight;
                 edgeCount++;

@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +14,9 @@ namespace Plagiarism_Validation
         public float avgSim = 0.0f;// average sum of edges of each component
         public List<Tuple<float, Edge>> edges;// edges of group stat
         public List<Edge> hashEdges = new List<Edge>();
-        public SortedSet<int> ids;// set contains the ids of each component 
+        public SortedSet<long> ids;// set contains the ids of each component 
         public int edgeCount = 0;//number of edges
-        public SortedSet<string> stringIds;
+        public List<string> stringIds;
 
         public Component(int weight, List<Tuple<long, Edge>> tuples)
         {
@@ -26,12 +26,24 @@ namespace Plagiarism_Validation
 
 
         }
-        public Component(float avg, List<Tuple<float, Edge>> edge, SortedSet<string> id, int edgesCount)
+        public void SortIds()
+        {
+            foreach(var id in stringIds)
+            {
+                long ll;
+                if (long.TryParse(id, out ll))
+                {
+                    ids.Add(ll);
+                   
+                }
+            }
+        }
+        public Component(float avg, List<Tuple<float, Edge>> edge, List<string> id, int edgesCount)
         {
             avgSim = avg;
             edges = new List<Tuple<float, Edge>>();
             edges = edge;
-            ids = new SortedSet<int>();
+            ids = new SortedSet<long>();
             stringIds = id;
             edgeCount = edgesCount;
         }

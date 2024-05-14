@@ -25,13 +25,13 @@ namespace Plagiarism_Validation
             // Start the stopwatch for GroupAnalyzer time
             Stopwatch groupAnalyzerStopwatch = new Stopwatch();
             Stopwatch mstStopwatch = new Stopwatch();
-            
-            
+
+
 
             // Read pairs from file
             string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Hard\2-Input.xlsx";
             List<Edge> pairs = Excel.ReadFilePairs(filePath);
-            
+
             // Analyze groups
             GraphAnalyzer graph = new GraphAnalyzer();
             graph.buildGraph(pairs);
@@ -40,11 +40,11 @@ namespace Plagiarism_Validation
             List<Component> components = graph.ConstructComponent();
             //sort components
             mstStopwatch.Start();
-            components.Sort((x, y) => (y.avgSim).CompareTo(x.avgSim));//sort descending  O(C log C)
+            components.Sort((x, y) => ((y.avgSim / y.edgeCount).CompareTo(x.avgSim / x.edgeCount)));//O(C log C)
             mstStopwatch.Stop();
             // Stop the stopwatch for GroupAnalyzer time
             groupAnalyzerStopwatch.Stop();
-            
+
             // Build MST
             /*MST_Graph mst_graph = new MST_Graph();
             mst_graph.BuildMSTGraph(pairs);*/
