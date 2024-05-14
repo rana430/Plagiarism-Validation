@@ -37,7 +37,7 @@ namespace Plagiarism_Validation
             graph.buildGraph(pairs);
             // Start the stopwatch for GroupAnalyzer time
             groupAnalyzerStopwatch.Start();
-            List<GroupStatComponent> sums = graph.ConnectedComponentsWithSumAndEdgeCount();
+            List<Component> sums = graph.ConstructComponent();
             //sort components
             sums.Sort((x, y) => (y.avgSimSum / y.edgeCount).CompareTo(x.avgSimSum / x.edgeCount));
             StatExcelWriter statexcelWriter = new StatExcelWriter();

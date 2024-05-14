@@ -9,7 +9,7 @@ namespace Plagiarism_Validation
         private HashSet<int> visited;
         private List<Tuple<float, Edge>> componentEdges;
 
-        public List<Component> groupComponents;
+        public List<Component> components;
         public int maxId;
 
         public GraphAnalyzer()
@@ -38,10 +38,10 @@ namespace Plagiarism_Validation
             }
         }
 
-        public List<GroupStatComponent> ConnectedComponentsWithSumAndEdgeCount()
+        public List<Component> ConstructComponent()
         {
-            var componentsWithSumAndEdgeCount = new List<GroupStatComponent>();
-            groupComponents = new List<Component>();
+
+            components = new List<Component>();
 
             foreach (var vertex in graph.Keys)
             {
@@ -54,12 +54,11 @@ namespace Plagiarism_Validation
 
                     DFS(vertex, ref componentVertices, ref sum, ref edgeCount);
 
-                    componentsWithSumAndEdgeCount.Add(new GroupStatComponent(componentVertices, sum, edgeCount));
-                    groupComponents.Add(new Component((float)(sum / edgeCount), componentEdges));
+                    components.Add(new Component((float)(sum / edgeCount), componentEdges,componentVertices,edgeCount));
                 }
             }
 
-            return componentsWithSumAndEdgeCount;
+            return components;
         }
 
         private void DFS(int v, ref SortedSet<int> componentVertices, ref float componentSum, ref int edgeCount)
@@ -70,7 +69,7 @@ namespace Plagiarism_Validation
             foreach (var edge in graph[v])
             {
                 int neighborVertex = (edge.Source.id == v) ? edge.Destination.id : edge.Source.id;
-                float weight = (edge.Source.id == v) ? edge.firstSimilarity : edge.secondSimilarity;
+                float weight = (edge.Source.id == v) ? edge.secondSimilarity : edge.firstSimilarity;
 
                 componentSum += weight;
                 edgeCount++;

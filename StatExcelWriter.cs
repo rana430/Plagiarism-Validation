@@ -10,7 +10,7 @@ namespace Plagiarism_Validation
 {
     public class StatExcelWriter
     {
-        public void WriteToExcel(string filePath, List<GroupStatComponent> components)
+        public void WriteToExcel(string filePath, List<Component> components)
         {
 
             using (var package = new ExcelPackage())
@@ -36,13 +36,13 @@ namespace Plagiarism_Validation
                 {
                     
                     // Convert the list of integers to a comma-separated string
-                    string verticesString = string.Join(", ", comp.edges);
+                    string verticesString = string.Join(", ", comp.ids);
 
                     // Write data to cells
                     worksheet.Cells[row, 1].Value = row - 1; // Component Index starts from 1
                     worksheet.Cells[row, 2].Value = verticesString;
-                    worksheet.Cells[row, 3].Value = Math.Round((float)(comp.avgSimSum / comp.edgeCount), 1);
-                    worksheet.Cells[row, 4].Value = comp.edges.Count;
+                    worksheet.Cells[row, 3].Value = Math.Round((float)(comp.avgSim / comp.edgeCount), 1);
+                    worksheet.Cells[row, 4].Value = comp.ids.Count;
                     row++;
                 }
 

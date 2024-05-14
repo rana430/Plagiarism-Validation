@@ -11,10 +11,11 @@ namespace Plagiarism_Validation
         public long weight=0;
         public int lineMatches;
         public List<Tuple<long, Edge>> nodes;//edges of mst
-        public float avgSim = 0.0f;
+        public float avgSim = 0.0f;// average sum of edges of each component
         public List<Tuple<float, Edge>> edges;// edges of group stat
         public List<Edge> hashEdges = new List<Edge>();
-
+        public SortedSet<int> ids;// set contains the ids of each component 
+        public int edgeCount = 0;//number of edges
 
         public Component(int weight, List<Tuple<long, Edge>> tuples)
         {
@@ -24,11 +25,14 @@ namespace Plagiarism_Validation
 
 
         }
-        public Component(float avg, List<Tuple<float, Edge>> edge)
+        public Component(float avg, List<Tuple<float, Edge>> edge, SortedSet<int> id, int edgesCount)
         {
             avgSim = avg;
             edges = new List<Tuple<float, Edge>>();
             edges = edge;
+            ids = new SortedSet<int>();
+            ids = id;
+            edgeCount = edgesCount;
         }
         public void AddTuple(Tuple<long, Edge> tuple)
         {
