@@ -11,12 +11,15 @@ namespace Plagiarism_Validation
         public string path;
         public int id;
         public string idString;
+        public Uri hyperLink;
+        public bool isValid;
         
-        public Node(string Path, String Id)
+        public Node(string Path, String Id, Uri link)
         {
             path = Path;
             idString = Id;
             id = StringIdAssigner.GetId(Id);
+            hyperLink = link;
         }
        
     }

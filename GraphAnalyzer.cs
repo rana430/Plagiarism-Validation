@@ -39,7 +39,6 @@ namespace Plagiarism_Validation
 
         public List<Component> ConstructComponent()//O(V+E)
         {
-            var componentsWithSumAndEdgeCount = new List<GroupStatComponent>();
             components = new List<Component>();
 
             foreach (var vertex in graph.Keys)

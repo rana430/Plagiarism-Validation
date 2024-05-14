@@ -16,6 +16,7 @@ namespace Plagiarism_Validation
         public int rowNumber;
         public int maxSimilarity;
         public float edgeAvgSim;
+        
 
         public Edge(int lineMatches, int firstSimilarity, int secondSimilarity, Node Source, Node Destination,int rowNumber)
         {

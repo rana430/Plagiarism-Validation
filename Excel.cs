@@ -37,6 +37,11 @@ namespace Plagiarism_Validation
                     string percentageString1 = cellValue1?.Replace("%", ""); // Ensure to handle null value
                     string percentageString2 = cellValue2?.Replace("%", ""); // Ensure to handle null value
 
+
+                    //save the hyperLink for each file and if its valid or not
+                    Uri cellLink1 = worksheet.Cells[row, 1].Hyperlink;
+                    Uri cellLink2 = worksheet.Cells[row, 2].Hyperlink;
+
                     // split cell values into file path and percentage
                     string[] parts1 = percentageString1?.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
                     string[] parts2 = percentageString2?.Split(new[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
@@ -52,8 +57,8 @@ namespace Plagiarism_Validation
                             int.TryParse(parts2[1], out percentage2) &&
                             int.TryParse(parts3[0], out lineMatches))
                         {
-                            Node source = new Node(cellValue1, ExtractId(parts1[0].Trim()));
-                            Node destination = new Node(cellValue2, ExtractId(parts2[0].Trim()));
+                            Node source = new Node(cellValue1, ExtractId(parts1[0].Trim()),cellLink1);
+                            Node destination = new Node(cellValue2, ExtractId(parts2[0].Trim()),cellLink2);
                             /*Console.Write(source.id);
                             Console.Write("  ");
                             Console.WriteLine(source.idString);

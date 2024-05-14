@@ -29,9 +29,9 @@ namespace Plagiarism_Validation
             
 
             // Read pairs from file
-            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Hard\1-Input.xlsx";
+            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Easy\2-Input.xlsx";
             List<Edge> pairs = Excel.ReadFilePairs(filePath);
-            mstStopwatch.Stop();
+            
             // Analyze groups
             GraphAnalyzer graph = new GraphAnalyzer();
             graph.buildGraph(pairs);
@@ -40,9 +40,6 @@ namespace Plagiarism_Validation
             List<Component> sums = graph.ConstructComponent();
             //sort components
             sums.Sort((x, y) => (y.avgSim).CompareTo(x.avgSim));
-            StatExcelWriter statexcelWriter = new StatExcelWriter();
-            string statOutFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\stat.xlsx";
-            statexcelWriter.WriteToExcel(statOutFilePath, sums);
 
             // Stop the stopwatch for GroupAnalyzer time
             groupAnalyzerStopwatch.Stop();
@@ -68,6 +65,12 @@ namespace Plagiarism_Validation
 
             // Stop the stopwatch for MST time
             mstStopwatch.Stop();
+            //restart group stat stopwatch
+            groupAnalyzerStopwatch.Restart();
+            StatExcelWriter statexcelWriter = new StatExcelWriter();
+            string statOutFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\stat.xlsx";
+            statexcelWriter.WriteToExcel(statOutFilePath, sums);
+            groupAnalyzerStopwatch.Stop();
 
             // Stop the stopwatch for total time
             totalStopwatch.Stop();

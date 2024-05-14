@@ -46,7 +46,7 @@ namespace Plagiarism_Validation
                     row++;
                 }
 
-                worksheet.Cells.AutoFitColumns();
+                worksheet.Cells.AutoFitColumns();//optimize this line
 
                 // Save Excel file
                 FileInfo excelFile = new FileInfo(filePath);
