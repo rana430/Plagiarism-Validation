@@ -76,17 +76,6 @@ namespace Plagiarism_Validation
             Console.WriteLine("****************************");
         }
 
-        /*public void printComponnentExcel()
-        {
-            foreach(var i in nodes)
-            {
-                hashEdges.Add(i.Item2);
-            }
-            ExcelWriter excelWriter = new ExcelWriter();
-            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Easy\MST.xlsx";
-            excelWriter.WriteToExcel(filePath, hashEdges);
-
-        }*/
         public void SortEdgesByLineMatches()
         {
             nodes.Sort((x, y) =>
@@ -110,15 +99,7 @@ namespace Plagiarism_Validation
                 return lineMatchesComparison;
             });
         }
-        /*public string getStringIds()
-        {
-            string result = "";
-            foreach(var id in ids)
-            {
-
-            }
-        }
-*/
+       
         public void sortComponentEdges()//sort the component edges according to the maxSim & line Matches
         {
 
