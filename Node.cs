@@ -12,7 +12,6 @@ namespace Plagiarism_Validation
         public int id;
         public string idString;
         public Uri hyperLink;
-        public bool isValid;
         
         public Node(string Path, String Id, Uri link)
         {

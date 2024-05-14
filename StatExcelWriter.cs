@@ -36,13 +36,13 @@ namespace Plagiarism_Validation
                 {
                     
                     // Convert the list of integers to a comma-separated string
-                    string verticesString = string.Join(", ", comp.ids);
+                    string verticesString = string.Join(", ", comp.stringIds);
 
                     // Write data to cells
                     worksheet.Cells[row, 1].Value = row - 1; // Component Index starts from 1
                     worksheet.Cells[row, 2].Value = verticesString;
                     worksheet.Cells[row, 3].Value = Math.Round((float)(comp.avgSim), 1);
-                    worksheet.Cells[row, 4].Value = comp.ids.Count;
+                    worksheet.Cells[row, 4].Value = comp.stringIds.Count;
                     row++;
                 }
 

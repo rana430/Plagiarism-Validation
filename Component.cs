@@ -16,6 +16,7 @@ namespace Plagiarism_Validation
         public List<Edge> hashEdges = new List<Edge>();
         public SortedSet<int> ids;// set contains the ids of each component 
         public int edgeCount = 0;//number of edges
+        public SortedSet<string> stringIds;
 
         public Component(int weight, List<Tuple<long, Edge>> tuples)
         {
@@ -25,13 +26,13 @@ namespace Plagiarism_Validation
 
 
         }
-        public Component(float avg, List<Tuple<float, Edge>> edge, SortedSet<int> id, int edgesCount)
+        public Component(float avg, List<Tuple<float, Edge>> edge, SortedSet<string> id, int edgesCount)
         {
             avgSim = avg;
             edges = new List<Tuple<float, Edge>>();
             edges = edge;
             ids = new SortedSet<int>();
-            ids = id;
+            stringIds = id;
             edgeCount = edgesCount;
         }
         public void AddTuple(Tuple<long, Edge> tuple)
@@ -97,7 +98,15 @@ namespace Plagiarism_Validation
                 return lineMatchesComparison;
             });
         }
+        /*public string getStringIds()
+        {
+            string result = "";
+            foreach(var id in ids)
+            {
 
+            }
+        }
+*/
         public void sortComponentEdges()//sort the component edges according to the maxSim & line Matches
         {
 

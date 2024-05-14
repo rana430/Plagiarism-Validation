@@ -40,12 +40,6 @@ namespace Plagiarism_Validation
                         file2Cell.Hyperlink = node.Item2.Destination.hyperLink;
                         file2Cell.Value = (node.Item2.Destination.path);
 
-                        /*// Apply the hyperlink style to make it look like a clickable link
-                        file1Cell.Style.Font.UnderLine = true;
-                        file1Cell.Style.Font.Color.SetColor(System.Drawing.Color.Blue);
-
-                        file2Cell.Style.Font.UnderLine = true;
-                        file2Cell.Style.Font.Color.SetColor(System.Drawing.Color.Blue);*/
 
                         worksheet.Cells[row, 3].Value = node.Item2.lineMatches;
                         row++;

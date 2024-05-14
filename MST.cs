@@ -61,7 +61,7 @@ namespace Plagiarism_Validation
             return maxCost;
         }
 
-        public long ConstructingMST(List<Component> components,List<Edge>edges) //sumation of C (O(E log E + E logV))
+        public long ConstructingMST(List<Component> components,List<Edge>edges) //sumation of C (O(E log E + E logV ))
         {
             
             MstComponents = components;
@@ -69,12 +69,12 @@ namespace Plagiarism_Validation
             Initialize(edges.Count*2);//O(e)
             foreach (var component in components)//O(C)
             {
-                List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();
+                List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();//change it to int 
                 List<Tuple<float, Edge>> componentEdge = new List<Tuple<float, Edge>>();
                 componentEdge= component.edges;
                 foreach (var item in componentEdge)// O(e)
                 {
-                    int weight = Math.Max(item.Item2.firstSimilarity, item.Item2.secondSimilarity);
+                    int weight = item.Item2.maxSimilarity;
                     edgeList.Add(new Tuple<long, Edge>(weight, item.Item2));
                 }
 

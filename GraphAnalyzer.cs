@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Plagiarism_Validation
 {
-    public class GraphAnalyzer
+    public class GraphAnalyzer //change its name
     {
         private Dictionary<int, HashSet<Edge>> graph;//adj matrix for graph
         private HashSet<int> visited;//list contains only visited nodes
@@ -45,10 +45,10 @@ namespace Plagiarism_Validation
             {
                 if (!visited.Contains(vertex))//O(V)
                 {
-                    var componentVertices = new SortedSet<int>();
+                    var componentVertices = new SortedSet<string>();
                     float sum = 0;
                     int edgeCount = 0;
-                    componentEdges = new List<Tuple<float, Edge>>();//init new one for each component
+                    componentEdges = new List<Tuple<float, Edge>>();//init new one for each component --we can remove float--
 
                     DFS(vertex, ref componentVertices, ref sum, ref edgeCount);//O(E)
 
@@ -60,10 +60,10 @@ namespace Plagiarism_Validation
             return components;
         }
 
-        private void DFS(int v, ref SortedSet<int> componentVertices, ref float componentSum, ref int edgeCount)
+        private void DFS(int v, ref SortedSet<string> componentVertices, ref float componentSum, ref int edgeCount)
         {
             visited.Add(v);
-            componentVertices.Add(v);
+            componentVertices.Add(StringIdAssigner.GetString(v));
 
             foreach (var edge in graph[v])
             {
