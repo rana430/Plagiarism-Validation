@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Plagiarism_Validation
 {
-    class Class1
+    class HelperMethods
     {
+        
     }
 }
