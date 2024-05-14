@@ -39,7 +39,7 @@ namespace Plagiarism_Validation
             groupAnalyzerStopwatch.Start();
             List<Component> sums = graph.ConstructComponent();
             //sort components
-            sums.Sort((x, y) => (y.avgSimSum / y.edgeCount).CompareTo(x.avgSimSum / x.edgeCount));
+            sums.Sort((x, y) => (y.avgSim).CompareTo(x.avgSim));
             StatExcelWriter statexcelWriter = new StatExcelWriter();
             string statOutFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\stat.xlsx";
             statexcelWriter.WriteToExcel(statOutFilePath, sums);
@@ -48,13 +48,13 @@ namespace Plagiarism_Validation
             groupAnalyzerStopwatch.Stop();
             
             // Build MST
-            MST_Graph mst_graph = new MST_Graph();
-            mst_graph.BuildMSTGraph(pairs);
+            /*MST_Graph mst_graph = new MST_Graph();
+            mst_graph.BuildMSTGraph(pairs);*/
 
             // Start the stopwatch for MST time
             mstStopwatch.Start();
             MST test = new MST();
-            long cost = test.ConstructingMST(graph.groupComponents, mst_graph.edges);
+            long cost = test.ConstructingMST(graph.components, pairs);
             List<Component> components = test.GetComponents();
 
             foreach (var i in components)

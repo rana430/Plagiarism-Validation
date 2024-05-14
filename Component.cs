@@ -98,6 +98,11 @@ namespace Plagiarism_Validation
             });
         }
 
+        public void sortComponentEdges()//sort the component edges according to the maxSim & line Matches
+        {
+
+        }
+
 
         public void calcWeight()
         {

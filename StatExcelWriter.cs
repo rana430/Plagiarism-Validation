@@ -41,7 +41,7 @@ namespace Plagiarism_Validation
                     // Write data to cells
                     worksheet.Cells[row, 1].Value = row - 1; // Component Index starts from 1
                     worksheet.Cells[row, 2].Value = verticesString;
-                    worksheet.Cells[row, 3].Value = Math.Round((float)(comp.avgSim / comp.edgeCount), 1);
+                    worksheet.Cells[row, 3].Value = Math.Round((float)(comp.avgSim), 1);
                     worksheet.Cells[row, 4].Value = comp.ids.Count;
                     row++;
                 }

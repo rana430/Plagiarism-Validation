@@ -26,7 +26,7 @@ namespace Plagiarism_Validation
             this.lineMatches = lineMatches;
             this.rowNumber = rowNumber;
             maxSimilarity = Math.Max(firstSimilarity, secondSimilarity);
+            edgeAvgSim = (float)((firstSimilarity + secondSimilarity) / 2.0f);
         }
-
     }
 }

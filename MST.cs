@@ -10,15 +10,11 @@ namespace Plagiarism_Validation
         public Tuple<long, Edge>[] p;
         public List<Tuple<long, Edge>> result;
         public List<int> idx;
-        public Dictionary<string, int> nodeIdMap;
         public List<Component> MstComponents = new List<Component>();
 
-        public MST()
-        {
-            nodeIdMap = new Dictionary<string, int>();
-        }
+      
 
-        public void Initialize(int size)//O()
+        public void Initialize(int size)//O(E)
         {
             id = new int[size];
             for (int i = 0; i < size ; ++i)
@@ -27,7 +23,7 @@ namespace Plagiarism_Validation
             }
         }
 
-        public int Root(int x)
+        public int Root(int x)//O(log V)
         {
             while (id[x] != x)
             {
@@ -37,14 +33,14 @@ namespace Plagiarism_Validation
             return x;
         }
 
-        public void Union(int x, int y)
+        public void Union(int x, int y)//O(log V)
         {
             int p = Root(x);
             int q = Root(y);
             id[p] = id[q];
         }
 
-        public long Kruskal(Tuple<long, Edge>[] p, Component component)//O(E log N)
+        public long Kruskal(Tuple<long, Edge>[] p, Component component)//O(E log V)
         {
             int x, y;
             long cost, maxCost = 0;
@@ -65,12 +61,12 @@ namespace Plagiarism_Validation
             return maxCost;
         }
 
-        public long ConstructingMST(List<Component> components,List<Edge>edges) //sumation of C (O(e log e))
+        public long ConstructingMST(List<Component> components,List<Edge>edges) //sumation of C (O(E log E + E logV))
         {
             
             MstComponents = components;
             long maxCost=0;
-            Initialize(edges.Count);//O(e)
+            Initialize(edges.Count*2);//O(e)
             foreach (var component in components)//O(C)
             {
                 List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();
@@ -98,51 +94,21 @@ namespace Plagiarism_Validation
                     return weightComparison;
                 });//o(e log e)
 
-                p = new Tuple<long, Edge>[edgeList.Count];
+                p = new Tuple<long, Edge>[edgeList.Count];//we convert it to array as we dont take the first edge also sorting list is faster than sorting array
                 p = edgeList.ToArray();//O(e)
-                /* foreach( var i in p)
-                 {
-                     Console.WriteLine($"    Node 1: {i.Item2.Source.id}, Node 2: {i.Item2.Destination.id}, Weight: {i.Item2.lineMatches}, cost: {i.Item1}");
-                 }
-     */
 
-                
-                maxCost += Kruskal(p,component);//O(e log N)
+                maxCost += Kruskal(p,component);//O(e log V)
 
             }
             return maxCost;
         }
 
-        /*public int GetNodeId(string nodeName)
-        {
-            if (!nodeIdMap.ContainsKey(nodeName))
-            {
-                nodeIdMap[nodeName] = nodeIdMap.Count;
-            }
-            return nodeIdMap[nodeName];
-        }
-        public void sortResult()
-        {
-            result.Sort();
-
-        }
-
-        public int GetResultSize()
-        {
-            return idx.Count;
-        }
-        public void printResult()
-        {
-            foreach (var tuple in result)
-            {
-                Console.WriteLine($"{tuple.Item1}, {tuple.Item2}");
-            }
-        }*/
-        public List<Component> GetComponents() //O(C)
+     
+        public List<Component> GetComponents() //O(C log c)
         {
           
             // Convert the dictionary values to a list of components
-            MstComponents.Sort((c1, c2) => c2.avgSim.CompareTo(c1.avgSim));//O(C)
+            MstComponents.Sort((c1, c2) => c2.avgSim.CompareTo(c1.avgSim));//O(C log c)
 
             return MstComponents;
         }

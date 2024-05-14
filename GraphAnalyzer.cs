@@ -5,12 +5,12 @@ namespace Plagiarism_Validation
 {
     public class GraphAnalyzer
     {
-        private Dictionary<int, HashSet<Edge>> graph;
-        private HashSet<int> visited;
-        private List<Tuple<float, Edge>> componentEdges;
+        private Dictionary<int, HashSet<Edge>> graph;//adj matrix for graph
+        private HashSet<int> visited;//list contains only visited nodes
+        private List<Tuple<float, Edge>> componentEdges; //list contains the edges of the created component --each component has its own--
 
-        public List<Component> components;
-        public int maxId;
+        public List<Component> components;//list of components constructed
+        public int maxId;//max number generated for the input file --not used--
 
         public GraphAnalyzer()
         {
@@ -19,13 +19,12 @@ namespace Plagiarism_Validation
             visited = new HashSet<int>();
         }
 
-        public void buildGraph(List<Edge> pairs)
+        public void buildGraph(List<Edge> pairs) // build unDirected Graph in O(E)
         {
             foreach (var edge in pairs)
             {
                 int sourceId = edge.Source.id;
                 int destinationId = edge.Destination.id;
-                float weight = (edge.firstSimilarity + edge.secondSimilarity) / 2.0f;
 
                 if (!graph.ContainsKey(sourceId))
                     graph[sourceId] = new HashSet<Edge>();
@@ -38,22 +37,23 @@ namespace Plagiarism_Validation
             }
         }
 
-        public List<Component> ConstructComponent()
+        public List<Component> ConstructComponent()//O(V+E)
         {
-
+            var componentsWithSumAndEdgeCount = new List<GroupStatComponent>();
             components = new List<Component>();
 
             foreach (var vertex in graph.Keys)
             {
-                if (!visited.Contains(vertex))
+                if (!visited.Contains(vertex))//O(V)
                 {
                     var componentVertices = new SortedSet<int>();
                     float sum = 0;
                     int edgeCount = 0;
-                    componentEdges = new List<Tuple<float, Edge>>();
+                    componentEdges = new List<Tuple<float, Edge>>();//init new one for each component
 
-                    DFS(vertex, ref componentVertices, ref sum, ref edgeCount);
+                    DFS(vertex, ref componentVertices, ref sum, ref edgeCount);//O(E)
 
+                    //componentsWithSumAndEdgeCount.Add(new GroupStatComponent(componentVertices, sum, edgeCount));
                     components.Add(new Component((float)(sum / edgeCount), componentEdges,componentVertices,edgeCount));
                 }
             }
@@ -68,8 +68,8 @@ namespace Plagiarism_Validation
 
             foreach (var edge in graph[v])
             {
-                int neighborVertex = (edge.Source.id == v) ? edge.Destination.id : edge.Source.id;
-                float weight = (edge.Source.id == v) ? edge.secondSimilarity : edge.firstSimilarity;
+                int neighborVertex = (edge.Source.id == v) ? edge.Destination.id : edge.Source.id;//this line is bec we pass edge not destination for the graph
+                float weight = edge.edgeAvgSim;
 
                 componentSum += weight;
                 edgeCount++;
