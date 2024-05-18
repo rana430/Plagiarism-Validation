@@ -94,22 +94,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MSTExcelWriter.cs" />
-    <Compile Include="GroupStatComponent.cs" />
     <Compile Include="StatExcelWriter.cs" />
     <Compile Include="StringIdAssigner.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Edge.cs" />
-    <Compile Include="GraphAnalyzer.cs" />
+    <Compile Include="GroupStat.cs" />
     <Compile Include="Node.cs" />
-    <Compile Include="Group_Stat.cs" />
-    <Compile Include="MST_Graph.cs" />
-    <Compile Include="HelperMethods.cs" />
+    <Compile Include="MSTGraph.cs" />
     <Compile Include="MST.cs" />
     <Compile Include="Excel.cs" />
-    <Compile Include="graphBuilder.cs" />
-    <Compile Include="Group_Stat.cs" />
-    <Compile Include="Prims.cs" />
-    <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestFile.cs" />

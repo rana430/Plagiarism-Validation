@@ -13,7 +13,6 @@ namespace Plagiarism_Validation
         public List<Tuple<long, Edge>> MstEdges;//edges of mst
         public float avgSim = 0.0f;// average sum of edges of each component
         public List<Tuple<float, Edge>> edges;// edges of group stat
-        public List<Edge> hashEdges = new List<Edge>();
         public SortedSet<long> ids;// set contains the ids of each component 
         public int edgeCount = 0;//number of edges
         public List<string> stringIds;
@@ -26,7 +25,7 @@ namespace Plagiarism_Validation
 
 
         }
-        public void SortIds()
+        public void convertIds()
         {
             foreach(var id in stringIds)
             {

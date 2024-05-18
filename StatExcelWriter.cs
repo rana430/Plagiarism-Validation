@@ -35,17 +35,8 @@ namespace Plagiarism_Validation
                 foreach (var comp in components)
                 {
 
-                    /*// Convert the list of integers to a comma-separated string
-                    string verticesString = string.Join(", ", comp.edges);
-
-                    // Write data to cells
-                    worksheet.Cells[row, 1].Value = row - 1; // Component Index starts from 1
-                    worksheet.Cells[row, 2].Value = verticesString;
-                    worksheet.Cells[row, 3].Value = Math.Round((float)(comp.avgSim / comp.edgeCount), 1);
-                    worksheet.Cells[row, 4].Value = comp.edges.Count;
-                    row++;*/
                     // Convert the list of integers to a comma-separated string
-                    comp.SortIds();
+                    comp.convertIds();
                     string verticesString = string.Join(", ", comp.ids);
 
                     // Write data to cells
