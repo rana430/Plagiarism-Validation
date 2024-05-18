@@ -7,7 +7,7 @@ namespace Plagiarism_Validation
     {
         private Dictionary<int, HashSet<Edge>> graph;//adj matrix for graph
         private HashSet<int> visited;//list contains only visited nodes
-        private List<Tuple<float, Edge>> componentEdges; //list contains the edges of the created component --each component has its own--
+        private List<Edge> componentEdges; //list contains the edges of the created component --each component has its own--
 
         public List<Component> components;//list of components constructed
         public int maxId;//max number generated for the input file --not used--
@@ -48,7 +48,7 @@ namespace Plagiarism_Validation
                     var componentVertices = new List<string>();
                     float sum = 0;
                     int edgeCount = 0;
-                    componentEdges = new List<Tuple<float, Edge>>();//init new one for each component --we can remove float--
+                    componentEdges = new List<Edge>();//init new one for each component --we can remove float--
 
                     DFS(vertex, ref componentVertices, ref sum, ref edgeCount);//O(E)
 
@@ -72,7 +72,7 @@ namespace Plagiarism_Validation
 
                 componentSum += weight;
                 edgeCount++;
-                componentEdges.Add(new Tuple<float, Edge>(weight, edge));
+                componentEdges.Add(edge);
 
                 if (!visited.Contains(neighborVertex))
                 {

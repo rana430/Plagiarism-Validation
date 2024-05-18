@@ -12,7 +12,7 @@ namespace Plagiarism_Validation
         public int lineMatches;
         public List<Tuple<long, Edge>> MstEdges;//edges of mst
         public float avgSim = 0.0f;// average sum of edges of each component
-        public List<Tuple<float, Edge>> edges;// edges of group stat
+        public List<Edge> edges;// edges of group stat
         public SortedSet<long> ids;// set contains the ids of each component 
         public int edgeCount = 0;//number of edges
         public List<string> stringIds;
@@ -37,10 +37,10 @@ namespace Plagiarism_Validation
                 }
             }
         }
-        public Component(float avg, List<Tuple<float, Edge>> edge, List<string> id, int edgesCount)
+        public Component(float avg, List<Edge> edge, List<string> id, int edgesCount)
         {
             avgSim = avg;
-            edges = new List<Tuple<float, Edge>>();
+            edges = new List<Edge>();
             edges = edge;
             ids = new SortedSet<long>();
             stringIds = id;
@@ -50,42 +50,11 @@ namespace Plagiarism_Validation
         {
             MstEdges.Add(tuple);
         }
-        public void AddTuple(Tuple<float, Edge> tuple)
+        public void AddTuple(Edge edge)
         {
-            edges.Add(tuple);
+            edges.Add(edge);
         }
-        public void printStatComponent()// for printing group stat in o(e)
-        {
-            foreach (var node in edges)
-            {
-
-                Console.WriteLine($"    Node 1: {node.Item2.Source.idString}, Node 2: {node.Item2.Destination.idString}, Weight: {node.Item2.lineMatches}");
-            }
-            Console.WriteLine("****************************");
-        }
-
-        public void PrintComponent()
-        {
-
-            foreach (var node in MstEdges)
-            {
-
-                Console.WriteLine($"    file 1: {node.Item2.Source.path}, file 2: {node.Item2.Destination.path}, Line Matches: {node.Item2.lineMatches}");
-            }
-            Console.WriteLine("****************************");
-        }
-
-        /*public void printComponnentExcel()
-        {
-            foreach(var i in nodes)
-            {
-                hashEdges.Add(i.Item2);
-            }
-            ExcelWriter excelWriter = new ExcelWriter();
-            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Easy\MST.xlsx";
-            excelWriter.WriteToExcel(filePath, hashEdges);
-
-        }*/
+        
         public void SortEdgesByLineMatches()
         {
             MstEdges.Sort((x, y) =>
@@ -109,28 +78,7 @@ namespace Plagiarism_Validation
                 return lineMatchesComparison;
             });
         }
-        /*public string getStringIds()
-        {
-            string result = "";
-            foreach(var id in ids)
-            {
-
-            }
-        }
-*/
-        public void sortComponentEdges()//sort the component edges according to the maxSim & line Matches
-        {
-
-        }
-
-
-        public void calcWeight()
-        {
-            foreach(var edge in MstEdges)//O(E)
-            {
-                weight += edge.Item1;
-            }
-        }
+      
 
     }
 }
