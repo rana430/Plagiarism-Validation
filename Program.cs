@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using OfficeOpenXml;
 
 namespace Plagiarism_Validation
@@ -12,45 +10,84 @@ namespace Plagiarism_Validation
     {
         static void Main(string[] args)
         {
-            /*// Path to your Excel file
-            string filePath = @"D:\uni\Algo\file.xlsx";
-            Excel excel = new Excel();
-            // Read the Excel file using the Excel class
-            Excel.Read(filePath);*/
+            Dictionary<int, string> testTypes = new Dictionary<int, string>
+            {
+                { 1, @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample" },
+                { 2, @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete" }
+            };
 
-            // Start the stopwatch for total time
-            Stopwatch totalStopwatch = new Stopwatch();
-            totalStopwatch.Start();
+            Dictionary<int, string> testLevels = new Dictionary<int, string>
+            {
+                { 1, "Easy" },
+                { 2, "Medium" },
+                { 3, "Hard" }
+            };
 
-            // Start the stopwatch for GroupAnalyzer time
-            Stopwatch groupAnalyzerStopwatch = new Stopwatch();
-            Stopwatch mstStopwatch = new Stopwatch();
-            
-            
+            bool continueProgram = true; // Assign an initial value to continueProgram
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("Test Cases: Select Test case type => 1- Sample   2- Complete");
+                if (!int.TryParse(Console.ReadLine(), out int choice) || (choice != 1 && choice != 2))
+                {
+                    Console.WriteLine("Invalid input. Enter 1 or 2!!");
+                    continue; // Skip to the next iteration of the loop
+                }
 
-            // Read pairs from file
-            string filePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Complete\Hard\2-Input.xlsx";
+                string folderPath = testTypes[choice];
+                int testLevelChoice = 1;
+                if (choice == 2)
+                {
+                    Console.WriteLine("Choose Test Level:\n1- Easy\n2- Medium\n3- Hard");
+                    if (!int.TryParse(Console.ReadLine(), out testLevelChoice) || (testLevelChoice < 1 || testLevelChoice > 3))
+                    {
+                        Console.WriteLine("Invalid input. Enter 1, 2 or 3!!");
+                        continue; // Skip to the next iteration of the loop
+                    }
+                    folderPath = Path.Combine(folderPath, testLevels[testLevelChoice]);
+                }
+
+                ProcessFilesInFolder(folderPath, testTypes[choice], testLevels[testLevelChoice]);
+
+                Console.WriteLine("Do you want to process another folder? (y/n)");
+                continueProgram = Console.ReadLine().ToLower() == "y";
+            } while (continueProgram);
+        }
+        
+        static void ProcessFilesInFolder(string folderPath, string testType, string testLevel)
+        {
+            // Get all Excel files in the folder
+            string[] excelFiles = Directory.GetFiles(folderPath, "*input.xlsx");
+            int idx = 1;//file number 
+            foreach (var filePath in excelFiles)
+            {
+                ProcessFile(filePath, testType, testLevel, idx++);
+            }
+        }
+
+        static void ProcessFile(string filePath, string testType, string testLevel, int idx)
+        {
+            TestFile testFile = new TestFile(testType, testLevel, filePath);
+            testFile.totalTimeStopwatch.Start();
+
             List<Edge> pairs = Excel.ReadFilePairs(filePath);
-            
+            testFile.GroupingTimeStopwatch.Start();
+
             // Analyze groups
             GraphAnalyzer graph = new GraphAnalyzer();
             graph.buildGraph(pairs);
             // Start the stopwatch for GroupAnalyzer time
-            groupAnalyzerStopwatch.Start();
+            testFile.GroupingTimeStopwatch.Start();
             List<Component> components = graph.ConstructComponent();
             //sort components
-            mstStopwatch.Start();
-            components.Sort((x, y) => (y.avgSim).CompareTo(x.avgSim));//sort descending  O(C log C)
-            mstStopwatch.Stop();
+            testFile.MSTTimeStopwatch.Start();
+            components.Sort((x, y) => ((y.avgSim / y.edgeCount).CompareTo(x.avgSim / x.edgeCount)));//O(C log C)
+            testFile.MSTTimeStopwatch.Stop();
             // Stop the stopwatch for GroupAnalyzer time
-            groupAnalyzerStopwatch.Stop();
-            
-            // Build MST
-            /*MST_Graph mst_graph = new MST_Graph();
-            mst_graph.BuildMSTGraph(pairs);*/
+            testFile.GroupingTimeStopwatch.Stop();
 
             // Start the stopwatch for MST time
-            mstStopwatch.Restart();
+            testFile.MSTTimeStopwatch.Restart();
             MST test = new MST();
             long cost = test.ConstructingMST(graph.components, pairs);
             //List<Component> components = test.GetComponents();
@@ -61,45 +98,36 @@ namespace Plagiarism_Validation
             }
 
             MSTExcelWriter excelWriter = new MSTExcelWriter();
-            string outFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\MST.xlsx";
+            string outFilePath = $@"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\{idx} -MST.xlsx";
             excelWriter.WriteToExcel(outFilePath, components);
 
             // Stop the stopwatch for MST time
-            mstStopwatch.Stop();
+            testFile.MSTTimeStopwatch.Stop();
             //restart group stat stopwatch
-            groupAnalyzerStopwatch.Restart();
+            testFile.GroupingTimeStopwatch.Restart();
             StatExcelWriter statexcelWriter = new StatExcelWriter();
-            string statOutFilePath = @"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\stat.xlsx";
+            string statOutFilePath = $@"F:\FCIS\Level 3\Second term\Algorithms\Project\[3] Plagiarism Validation\Test Cases\Sample\{idx} -stat.xlsx";
             statexcelWriter.WriteToExcel(statOutFilePath, components);
-            groupAnalyzerStopwatch.Stop();
+            testFile.GroupingTimeStopwatch.Stop();
 
             // Stop the stopwatch for total time
-            totalStopwatch.Stop();
+            testFile.totalTimeStopwatch.Stop();
 
             // Get the elapsed time for each component
-            long groupAnalyzerElapsedTime = groupAnalyzerStopwatch.ElapsedMilliseconds;
-            long mstElapsedTime = mstStopwatch.ElapsedMilliseconds;
-            long totalElapsedTime = totalStopwatch.ElapsedMilliseconds;
+            long groupAnalyzerElapsedTime = testFile.GroupingTimeStopwatch.ElapsedMilliseconds;
+            long mstElapsedTime = testFile.MSTTimeStopwatch.ElapsedMilliseconds;
+            long totalElapsedTime = testFile.totalTimeStopwatch.ElapsedMilliseconds;
 
             // Print the elapsed time for each component
+            Console.WriteLine($"Statistics for input number {idx}:");
             Console.WriteLine($"GroupAnalyzer Time: {groupAnalyzerElapsedTime} milliseconds");
             Console.WriteLine($"MST Time: {mstElapsedTime} milliseconds");
             Console.WriteLine($"Total Time: {totalElapsedTime} milliseconds");
-
-            //prims test 
-
-            /*Prims prims = new Prims();
-            prims.ConstructMSTForComponent(pairs);
-            foreach(var i in prims.Result)
-            {
-                Console.WriteLine(i.Item1);
-                Console.WriteLine(i.Item2.Source.id);
-                Console.WriteLine(i.Item2.Destination.id);
-                Console.WriteLine("**********");
-
-            }*/
-
+            Console.WriteLine();
+            StringIdAssigner.Reset();
 
         }
     }
+
+
 }

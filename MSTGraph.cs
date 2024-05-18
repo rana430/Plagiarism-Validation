@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Plagiarism_Validation
 {
-    public class MST_Graph
+    public class MSTGraph
     {
         public List<Edge> edges;
 
-        public MST_Graph()
+        public MSTGraph()
         {
             edges = new List<Edge>();
         }

@@ -1,7 +1,11 @@
 ﻿using OfficeOpenXml;
 using System;
 using System.IO;
+
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Plagiarism_Validation
 {
@@ -28,30 +32,23 @@ namespace Plagiarism_Validation
                 int row = 2;
                 foreach (var comp in components)
                 {
-                    foreach (var node in comp.nodes)
+                    foreach (var node in comp.MstEdges)
                     {
-                        // Add hyperlinks to the cells
-                        var file1Cell = worksheet.Cells[row, 1];
-                        var file2Cell = worksheet.Cells[row, 2];
-
-                        file1Cell.Hyperlink = node.Item2.Source.hyperLink;
-                        file1Cell.Value = node.Item2.Source.path;
-
-                        file2Cell.Hyperlink = node.Item2.Destination.hyperLink;
-                        file2Cell.Value = (node.Item2.Destination.path);
-
-
+                        worksheet.Cells[row, 1].Value = node.Item2.Source.path;   
+                        if(node.Item2.Source.isValid)
+                            worksheet.Cells[row, 1].Hyperlink = node.Item2.Source.hyperLink;
+                        worksheet.Cells[row, 2].Value = node.Item2.Destination.path;
+                        if (node.Item2.Destination.isValid)
+                            worksheet.Cells[row, 2].Hyperlink = node.Item2.Destination.hyperLink;
                         worksheet.Cells[row, 3].Value = node.Item2.lineMatches;
                         row++;
                     }
                 }
                 worksheet.Cells.AutoFitColumns();
-
                 // Save Excel file
                 FileInfo excelFile = new FileInfo(filePath);
                 package.SaveAs(excelFile);
             }
         }
-
     }
 }

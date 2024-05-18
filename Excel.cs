@@ -59,10 +59,7 @@ namespace Plagiarism_Validation
                         {
                             Node source = new Node(cellValue1, ExtractId(parts1[0].Trim()),cellLink1);
                             Node destination = new Node(cellValue2, ExtractId(parts2[0].Trim()),cellLink2);
-                            /*Console.Write(source.id);
-                            Console.Write("  ");
-                            Console.WriteLine(source.idString);
-                            Console.Write(destination.id);Console.Write("  "); Console.WriteLine(destination.idString);*/
+                           
                             // Create an Edge object and add it to the list
                             Edge edge = new Edge(lineMatches, percentage1, percentage2, source, destination,row);
                             pairs.Add(edge);
@@ -94,28 +91,6 @@ namespace Plagiarism_Validation
             return id;
 
         }
-
-        public static int ParseId(string input)
-        {
-            // Regular expression to extract the ID
-            string pattern = @"(\d+)/";
-
-            // Match the pattern in the input string
-            Match match = Regex.Match(input, pattern);
-
-            if (match.Success)
-            {
-                // Extract the matched ID and convert it to an integer
-                if (int.TryParse(match.Groups[1].Value, out int id))
-                {
-                    return id;
-                }
-            }
-
-            // Return -1 if parsing fails or no match is found
-            return -1;
-        }
-
 
     }
 }

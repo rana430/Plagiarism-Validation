@@ -7,7 +7,7 @@ namespace Plagiarism_Validation
     public class MST
     {
         public int[] id;
-        public Tuple<long, Edge>[] p;
+        public Tuple<int, Edge>[] p;
         public List<Tuple<long, Edge>> result;
         public List<int> idx;
         public List<Component> MstComponents = new List<Component>();
@@ -40,22 +40,22 @@ namespace Plagiarism_Validation
             id[p] = id[q];
         }
 
-        public long Kruskal(Tuple<long, Edge>[] p, Component component)//O(E log V)
+        public long Kruskal(Tuple<int, Edge>[] p, Component component)//O(E log V)
         {
             int x, y;
             long cost, maxCost = 0;
-            component.nodes = new List<Tuple<long, Edge>>();
+            component.MstEdges = new List<Tuple<long, Edge>>();
             
             for (int i = 1; i < p.Length; ++i)
             {
                 x = p[i].Item2.Source.id;
                 y = p[i].Item2.Destination.id;
                 cost = p[i].Item1;
-                if (Root(x) != Root(y))
+                if (Root(x) != Root(y))//Log(V)
                 {
                     maxCost += cost;
-                    Union(x, y);
-                    component.nodes.Add(new Tuple<long, Edge>(cost, p[i].Item2));
+                    Union(x, y);//Log (V)
+                    component.MstEdges.Add(new Tuple<long, Edge>(cost, p[i].Item2));
                 }
             }
             return maxCost;
@@ -69,13 +69,13 @@ namespace Plagiarism_Validation
             Initialize(edges.Count*2);//O(e)
             foreach (var component in components)//O(C)
             {
-                List<Tuple<long, Edge>> edgeList = new List<Tuple<long, Edge>>();//change it to int 
-                List<Tuple<float, Edge>> componentEdge = new List<Tuple<float, Edge>>();
+                List<Tuple<int, Edge>> edgeList = new List<Tuple<int, Edge>>();
+                List<Edge> componentEdge = new List<Edge>();
                 componentEdge= component.edges;
                 foreach (var item in componentEdge)// O(e)
                 {
-                    int weight = item.Item2.maxSimilarity;
-                    edgeList.Add(new Tuple<long, Edge>(weight, item.Item2));
+                    int weight = item.maxSimilarity;
+                    edgeList.Add(new Tuple<int, Edge>(weight, item));
                 }
 
                 edgeList.Sort((x, y) =>
@@ -94,7 +94,7 @@ namespace Plagiarism_Validation
                     return weightComparison;
                 });//o(e log e)
 
-                p = new Tuple<long, Edge>[edgeList.Count];//we convert it to array as we dont take the first edge also sorting list is faster than sorting array
+                p = new Tuple<int, Edge>[edgeList.Count];//we convert it to array as we dont take the first edge also sorting list is faster than sorting array
                 p = edgeList.ToArray();//O(e)
 
                 maxCost += Kruskal(p,component);//O(e log V)
