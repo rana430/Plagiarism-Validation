@@ -73,3 +73,7 @@ The Plagiarism Validation Project is designed to analyze and compare pairs of fi
 - **MST.cs:** Contains methods to construct MSTs from graph components.
 - **MSTExcelWriter.cs:** Contains methods to write MST results to an Excel file.
 - **StatExcelWriter.cs:** Contains methods to write statistical analysis results to an Excel file.
+
+## Time Statistics for input files
+![image](https://github.com/rana430/Plagiarism-Validation/assets/77112808/9b9fbd2b-4732-4765-9e28-100a201b2343)
+
