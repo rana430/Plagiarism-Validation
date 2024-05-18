@@ -12,6 +12,7 @@ namespace Plagiarism_Validation
         public int id;
         public string idString;
         public Uri hyperLink;
+        public bool isValid = true; // check if the htperLink is valid 
         
         public Node(string Path, String Id, Uri link)
         {
@@ -19,6 +20,7 @@ namespace Plagiarism_Validation
             idString = Id;
             id = StringIdAssigner.GetId(Id);
             hyperLink = link;
+            isValid = link != null;
         }
        
     }

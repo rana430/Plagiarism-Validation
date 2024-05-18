@@ -44,18 +44,18 @@ namespace Plagiarism_Validation
         {
             int x, y;
             long cost, maxCost = 0;
-            component.nodes = new List<Tuple<long, Edge>>();
+            component.MstEdges = new List<Tuple<long, Edge>>();
             
             for (int i = 1; i < p.Length; ++i)
             {
                 x = p[i].Item2.Source.id;
                 y = p[i].Item2.Destination.id;
                 cost = p[i].Item1;
-                if (Root(x) != Root(y))
+                if (Root(x) != Root(y))//Log(V)
                 {
                     maxCost += cost;
-                    Union(x, y);
-                    component.nodes.Add(new Tuple<long, Edge>(cost, p[i].Item2));
+                    Union(x, y);//Log (V)
+                    component.MstEdges.Add(new Tuple<long, Edge>(cost, p[i].Item2));
                 }
             }
             return maxCost;

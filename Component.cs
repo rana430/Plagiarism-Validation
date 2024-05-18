@@ -10,7 +10,7 @@ namespace Plagiarism_Validation
     {
         public long weight=0;
         public int lineMatches;
-        public List<Tuple<long, Edge>> nodes;//edges of mst
+        public List<Tuple<long, Edge>> MstEdges;//edges of mst
         public float avgSim = 0.0f;// average sum of edges of each component
         public List<Tuple<float, Edge>> edges;// edges of group stat
         public List<Edge> hashEdges = new List<Edge>();
@@ -21,8 +21,8 @@ namespace Plagiarism_Validation
         public Component(int weight, List<Tuple<long, Edge>> tuples)
         {
             this.weight = weight;
-            nodes = new List<Tuple<long, Edge>>();
-            nodes = tuples;
+            MstEdges = new List<Tuple<long, Edge>>();
+            MstEdges = tuples;
 
 
         }
@@ -49,7 +49,7 @@ namespace Plagiarism_Validation
         }
         public void AddTuple(Tuple<long, Edge> tuple)
         {
-            nodes.Add(tuple);
+            MstEdges.Add(tuple);
         }
         public void AddTuple(Tuple<float, Edge> tuple)
         {
@@ -68,7 +68,7 @@ namespace Plagiarism_Validation
         public void PrintComponent()
         {
 
-            foreach (var node in nodes)
+            foreach (var node in MstEdges)
             {
 
                 Console.WriteLine($"    file 1: {node.Item2.Source.path}, file 2: {node.Item2.Destination.path}, Line Matches: {node.Item2.lineMatches}");
@@ -89,7 +89,7 @@ namespace Plagiarism_Validation
         }*/
         public void SortEdgesByLineMatches()
         {
-            nodes.Sort((x, y) =>
+            MstEdges.Sort((x, y) =>
             {
                 // First, compare line matches
                 int lineMatchesComparison = y.Item2.lineMatches.CompareTo(x.Item2.lineMatches);
@@ -127,7 +127,7 @@ namespace Plagiarism_Validation
 
         public void calcWeight()
         {
-            foreach(var edge in nodes)//O(E)
+            foreach(var edge in MstEdges)//O(E)
             {
                 weight += edge.Item1;
             }

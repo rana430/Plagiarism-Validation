@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*using Lucene.Net.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,98 +7,59 @@ namespace Plagiarism_Validation
 {
     public class Prims
     {
-        private int[] _key;
-        private bool[] _visited;
-        private int[] _parent;
-        public List<Tuple<long, Edge>> Result;
-        public Dictionary<string, int> NodeIdMap;
+        public List<Node> nodes = new List<Node>();
+        private Dictionary<int, Node> nodeLookup = new Dictionary<int, Node>();
 
-        public Prims()
+        public void AddNode(Node node)
         {
-            NodeIdMap = new Dictionary<string, int>();
+            nodes.Add(node);
+            nodeLookup[node.id] = node;
         }
 
-        public void Initialize(int size)
+        public (List<Edge>, int) GetMST(List<Edge> edges)
         {
-            _key = new int[size + 1];
-            _visited = new bool[size + 1];
-            _parent = new int[size + 1];
-            Result = new List<Tuple<long, Edge>>();
+            if (nodes.Count == 0 || edges.Count == 0)
+                return (new List<Edge>(), 0);
 
-            for (int i = 0; i <= size; ++i)
+            var mstEdges = new List<Edge>();
+            int totalCost = 0;
+
+            // Use PriorityQueue with Edge as the element and int as the priority
+            var edgeQueue = new PriorityQueue<Edge, int>();
+
+            int startNodeId = nodes[0].id;
+            var inMST = new HashSet<int> { startNodeId };
+
+            AddEdgesToQueue(startNodeId, edges, edgeQueue, inMST);
+
+            while (edgeQueue.Count > 0)
             {
-                _key[i] = int.MinValue;
-                _visited[i] = false;
-                _parent[i] = -1;
+                // Dequeue the edge with the highest priority (maxSimilarity)
+                edgeQueue.TryDequeue(out var edge, out var priority);
+
+                int nodeId = inMST.Contains(edge.Source.id) ? edge.Destination.id : edge.Source.id;
+
+                if (inMST.Contains(nodeId))
+                    continue;
+
+                mstEdges.Add(edge);
+                totalCost += edge.maxSimilarity;
+                inMST.Add(nodeId);
+
+                AddEdgesToQueue(nodeId, edges, edgeQueue, inMST);
             }
+
+            return (mstEdges, totalCost);
         }
 
-        public void ConstructMSTForComponent(List<Edge> componentEdges)
+        private void AddEdgesToQueue(int nodeId, List<Edge> edges, PriorityQueue<Edge, int> edgeQueue, HashSet<int> inMST)
         {
-            int componentSize = componentEdges.Count;
-            Initialize(componentSize + 5);
-            
-
-            // Prim's algorithm for maximum spanning tree
-            for (int i = 0; i <= componentSize; i++)
+            foreach (var edge in edges.Where(e => e.Source.id == nodeId || e.Destination.id == nodeId))
             {
-                int u = MaxKey();
-                _visited[u] = true;
-
-                foreach (var edge in componentEdges)
-                {
-                    int v = edge.Destination.id;
-                    int weight = Math.Max(edge.firstSimilarity, edge.secondSimilarity); // Use Math.Max for weight
-
-                    if (!_visited[v] && weight > _key[v])
-                    {
-                        _parent[v] = u;
-                        _key[v] = weight;
-                    }
-                }
+                if (!inMST.Contains(edge.Destination.id) || !inMST.Contains(edge.Source.id))
+                    edgeQueue.Enqueue(edge, edge.maxSimilarity);
             }
-
-            // Add edges to result
-            for (int i = 1; i <= componentSize; i++)
-            {
-                if (_parent[i] != -1)
-                {
-                   int u = _parent[i];
-                    Edge edge = componentEdges[i];
-                    Result.Add(new Tuple<long, Edge>(Math.Max(edge.firstSimilarity, edge.secondSimilarity), edge));
-                }
-            }
-
-            // Print max cost for the component
-            long maxCost = Result.Sum(tuple => tuple.Item1);
-            Console.WriteLine($"Max Cost for Component: {maxCost}");
-        }
-
-
-        private int MaxKey()
-        {
-            int max = int.MinValue;
-            int maxIndex = 0;
-
-            for (int v = 1; v < _key.Length; ++v)
-            {
-                if (!_visited[v] && _key[v] > max)
-                {
-                    max = _key[v];
-                    maxIndex = v;
-                }
-            }
-
-            return maxIndex;
-        }
-
-        public int GetNodeId(string nodeName)
-        {
-            if (!NodeIdMap.ContainsKey(nodeName))
-            {
-                NodeIdMap[nodeName] = NodeIdMap.Count;
-            }
-            return NodeIdMap[nodeName];
         }
     }
 }
+*/

@@ -32,10 +32,14 @@ namespace Plagiarism_Validation
                 int row = 2;
                 foreach (var comp in components)
                 {
-                    foreach (var node in comp.nodes)
+                    foreach (var node in comp.MstEdges)
                     {
-                        worksheet.Cells[row, 1].Value = node.Item2.Source.path;
+                        worksheet.Cells[row, 1].Value = node.Item2.Source.path;   
+                        if(node.Item2.Source.isValid)
+                            worksheet.Cells[row, 1].Hyperlink = node.Item2.Source.hyperLink;
                         worksheet.Cells[row, 2].Value = node.Item2.Destination.path;
+                        if (node.Item2.Destination.isValid)
+                            worksheet.Cells[row, 2].Hyperlink = node.Item2.Destination.hyperLink;
                         worksheet.Cells[row, 3].Value = node.Item2.lineMatches;
                         row++;
                     }
