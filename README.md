@@ -8,7 +8,8 @@ The Plagiarism Validation Project is designed to analyze and compare pairs of fi
 
 - Reads multiple Excel files from specified folders.
 - Analyzes and constructs graphs from file pairs.
-- Builds Minimum Spanning Trees (MST) from the constructed graphs.
+- Builds Maximum Spanning Trees (MST) from the constructed graphs.
+- Implements Kruskal algorithm.
 - Outputs analysis results to new Excel files.
 - Provides performance timing for each stage of processing.
 
